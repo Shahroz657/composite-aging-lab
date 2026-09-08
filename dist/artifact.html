@@ -27,15 +27,16 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 .topnav { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 20px; padding: 10px 24px; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
 .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; text-decoration: none; }
 .brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-.topnav nav { display: flex; gap: 2px; flex: 1; overflow-x: auto; }
-.topnav nav a { text-decoration: none; padding: 6px 10px; border-radius: 8px; color: var(--ink-2); font-size: 14px; white-space: nowrap; }
-.topnav nav a:hover { background: var(--surface-2); color: var(--ink); }
-.nav-right { display: flex; align-items: center; gap: 8px; }
+.topnav nav { display: flex; gap: 2px; overflow-x: auto; background: var(--surface-2); border-radius: 10px; padding: 3px; }
+.topnav nav a { text-decoration: none; padding: 6px 11px; border-radius: 8px; color: var(--ink-2); font-size: 13.5px; font-weight: 500; white-space: nowrap; }
+.topnav nav a:hover { color: var(--ink); }
+.topnav nav a.on { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+.nav-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
 .ghost { text-decoration: none; font-size: 13px; color: var(--ink-2); padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; }
 .iconbtn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); font-size: 16px; }
 
 main { max-width: 1180px; margin: 0 auto; padding: 0 24px 60px; }
-.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 32px; align-items: center; padding: 48px 0 32px; }
+.hero { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 32px; align-items: center; padding: 40px 0 24px; }
 .eyebrow { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin-bottom: 14px; }
 h1 { font-size: clamp(28px, 3.6vw, 42px); line-height: 1.12; letter-spacing: -0.02em; margin: 0 0 16px; font-weight: 600; text-wrap: balance; }
 .lede { font-size: 16px; color: var(--ink-2); max-width: 58ch; margin: 0 0 22px; }
@@ -45,16 +46,21 @@ h1 { font-size: clamp(28px, 3.6vw, 42px); line-height: 1.12; letter-spacing: -0.
 .tile .l { font-size: 12px; color: var(--ink-3); }
 .hero-3d { position: relative; }
 .stage { position: relative; height: 380px; border-radius: 14px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
-.stage.tall { height: 440px; }
+.stage.tall { height: 520px; }
+#laminateStage { height: 420px; margin: 0 0 18px; }
 .stage canvas { display: block; }
 .stage .labels { position: absolute; inset: 0; pointer-events: none; }
 .lbl3d { font-size: 12px; color: var(--ink-2); background: color-mix(in srgb, var(--surface) 85%, transparent); padding: 2px 7px; border-radius: 6px; white-space: nowrap; border: 1px solid var(--line); }
 .lbl3d.caption { font-weight: 500; color: var(--ink); }
+.lbl3d.tag { font-size: 11.5px; color: var(--ink); background: color-mix(in srgb, var(--surface) 92%, transparent); border-color: var(--line-strong); }
+.stage.nolabels .lbl3d.tag { display: none; }
 .stage-hint { font-size: 12px; color: var(--ink-3); margin-top: 6px; text-align: right; }
 .tooltip3d { position: fixed; z-index: 30; max-width: 280px; background: var(--ink); color: var(--surface); font-size: 12.5px; padding: 8px 10px; border-radius: 8px; pointer-events: none; box-shadow: var(--shadow); }
 .tooltip3d b { display: block; font-size: 13px; margin-bottom: 2px; }
 
-.section { padding: 40px 0 8px; border-top: 1px solid var(--line); margin-top: 24px; }
+.section { display: none; padding: 32px 0 24px; }
+.section.active { display: block; }
+.hero.section { display: none; } .hero.section.active { display: grid; }
 .section-head { max-width: 72ch; margin-bottom: 22px; }
 .section-head h2 { font-size: 26px; letter-spacing: -0.015em; margin: 0 0 8px; font-weight: 600; text-wrap: balance; }
 .section-head p { margin: 0; color: var(--ink-2); }
@@ -75,6 +81,7 @@ h3.sub { font-size: 15px; font-weight: 600; margin: 28px 0 10px; }
 .card p { margin: 0; font-size: 13px; color: var(--ink-2); }
 
 .split { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 20px; align-items: start; }
+.split.narrow-left { grid-template-columns: 300px minmax(0, 1fr); }
 .side { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
 .side h3 { margin: 0 0 6px; font-size: 17px; }
 .side p { margin: 0 0 12px; color: var(--ink-2); font-size: 14px; }
@@ -115,6 +122,10 @@ input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 
 .charts { display: grid; gap: 14px; }
 .charts.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .charts.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.charts.big .chart { padding: 16px 16px 10px; }
+.findings-inline { display: grid; gap: 10px; align-content: start; }
+.findings-inline .finding { padding: 12px 14px; }
+.toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); margin: 0 0 10px; }
 .chart { position: relative; margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 12px 8px; }
 .chart-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
 .chart-title { font-weight: 600; font-size: 14px; }
@@ -165,12 +176,15 @@ input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 
 @media (max-width: 960px) {
   .hero { grid-template-columns: 1fr; padding-top: 28px; }
   .cards { grid-template-columns: repeat(2, 1fr); }
+  .split.narrow-left { grid-template-columns: 1fr; }
   .split { grid-template-columns: 1fr; }
   .charts.three { grid-template-columns: 1fr; }
   .charts.two { grid-template-columns: 1fr; }
   .findings { grid-template-columns: 1fr; }
   .tiles { grid-template-columns: repeat(2, 1fr); }
-  .topnav nav { display: none; }
+  .topnav { flex-wrap: wrap; }
+  .nav-right { width: 100%; margin-left: 0; }
+  .topnav nav { flex: 1; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
@@ -178,15 +192,17 @@ input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
 
 <header class="topnav">
-  <a class="brand" href="#top"><span class="dot"></span>Basalt–Carbon Aging Lab</a>
-  <nav>
-    <a href="#laminates">Laminates</a><a href="#rigs">Aging rigs</a><a href="#moisture">Moisture</a><a href="#tests">Tests</a><a href="#results">Results</a><a href="#checks">Checks</a>
-  </nav>
-  <div class="nav-right"><a class="ghost" href="https://machine-atlas-ecru.vercel.app/" target="_blank" rel="noopener">Machine Atlas ↗</a><button class="iconbtn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button></div>
+  <a class="brand" href="#overview"><span class="dot"></span>Basalt–Carbon Aging Lab</a>
+  <div class="nav-right">
+    <nav id="sectionNav" role="tablist">
+      <a href="#overview" data-section="overview" class="on">Overview</a><a href="#laminates" data-section="laminates">Laminates</a><a href="#rigs" data-section="rigs">Aging rigs</a><a href="#moisture" data-section="moisture">Moisture</a><a href="#tests" data-section="tests">Tests</a><a href="#results" data-section="results">Results</a><a href="#checks" data-section="checks">Checks</a>
+    </nav>
+    <button class="iconbtn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button>
+  </div>
 </header>
 
-<main id="top">
-  <section class="hero">
+<main>
+  <section class="hero section active" id="overview">
     <div class="hero-text">
       <div class="eyebrow">Final-year project · NUST College of E&amp;ME · 2024</div>
       <h1>What twenty days in hot salt water do to carbon, basalt, and their hybrids</h1>
@@ -195,12 +211,14 @@ input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 
     </div>
     <div class="hero-3d">
       <div class="stage" id="stackStage"></div>
-      <div class="stage-hint">Plies fanned open so the carbon core shows · drag to orbit · hover a ply · click a card below to open one stack</div>
+      <div class="stage-hint">Plies fanned open so the carbon core shows · drag to orbit · hover a ply</div>
     </div>
   </section>
 
   <section id="laminates" class="section">
-    <div class="section-head"><h2>Four laminates, one question</h2><p>Carbon is stiff and strong but corrodes the aluminium it touches. Basalt is inert and cheap but half as stiff. The hybrids put basalt on the faces, where the metal is, and carbon in the core, where the stiffness comes from. Click a laminate to explode its stack above.</p></div>
+    <div class="section-head"><h2>Four laminates, one question</h2><p>Carbon is stiff and strong but corrodes the aluminium it touches. Basalt is inert and cheap but half as stiff. The hybrids put basalt on the faces, where the metal is, and carbon in the core, where the stiffness comes from. Click a laminate to open its stack.</p></div>
+    <div class="stage" id="laminateStage"></div>
+    <div class="stage-hint">Drag to orbit · hover a ply</div>
     <div class="cards" id="laminateCards"></div>
   </section>
 
@@ -208,7 +226,7 @@ input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 
     <div class="section-head"><h2>Two home-built aging rigs</h2><p>Both chambers were designed in SolidWorks and run by Arduino-class controllers with relays, sensors and cloud logging. Hover the components.</p></div>
     <div class="split">
       <div>
-        <div class="segmented" id="rigTabs"><button class="on" data-rig="hydro">Hydro-thermal bath</button><button data-rig="hygro">Hygro-thermal chamber</button></div>
+        <div class="controls-row"><div class="segmented" id="rigTabs"><button class="on" data-rig="hydro">Hydro-thermal bath</button><button data-rig="hygro">Hygro-thermal chamber</button></div><label class="toggle"><input type="checkbox" id="labelsToggle" checked> Labels</label></div>
         <div class="stage tall" id="rigStage"></div>
         <div class="stage-hint">Drag to orbit · hover a component</div>
       </div>
@@ -227,14 +245,15 @@ input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 
 
   <section id="moisture" class="section">
     <div class="section-head"><h2>Why aging is slow, and why it matters</h2><p>Water enters epoxy by diffusion. For a laminate a few millimetres thick at typical diffusivities, ten or twenty days is far from saturation, so the aged coupons were wet at the surface and still dry in the core. The model below is Fick's law for a plate wetted from both faces. It is a model, not something the project measured.</p></div>
-    <div class="split">
+    <div class="split narrow-left">
       <div class="ctl-grid">
         <label>Diffusivity <span class="mono" id="dVal"></span><input type="range" id="dSlider" min="-7" max="-5.7" step="0.01" value="-6.3"></label>
         <label>Thickness <span class="mono" id="hVal"></span><input type="range" id="hSlider" min="2" max="6" step="0.1" value="3.8"></label>
         <label>Saturation uptake <span class="mono" id="mVal"></span><input type="range" id="mSlider" min="0.5" max="3" step="0.1" value="1.5"></label>
         <label>Day shown in the profile <span class="mono" id="tVal"></span><input type="range" id="tSlider" min="0" max="120" step="1" value="20"></label>
+        <div class="note">Defaults: D = 5 × 10⁻⁷ mm²/s and 1.5 % saturation, typical of epoxy laminates in warm water; the laminate is your 3.8 mm average thickness.</div>
       </div>
-      <div class="charts two"><div id="uptakeChart"></div><div id="profileChart"></div></div>
+      <div class="charts two big"><div id="uptakeChart"></div><div id="profileChart"></div></div>
     </div>
   </section>
 
@@ -264,8 +283,7 @@ input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 
 
   <section id="results" class="section">
     <div class="section-head"><h2>What aging did</h2><p>Means of two specimens per point, with both specimens shown as small dots. Hover for values, or open the table under each chart.</p></div>
-    <div class="charts three"><div id="strengthChart"></div><div id="modulusChart"></div><div id="ilssChart"></div></div>
-    <div class="findings" id="findings"></div>
+    <div class="charts two big"><div id="strengthChart"></div><div id="modulusChart"></div><div id="ilssChart"></div><div class="findings-inline" id="findings"></div></div>
     <h3 class="sub">Retained after 20 days, as a share of the un-aged mean</h3>
     <div class="charts three"><div id="retStrength"></div><div id="retModulus"></div><div id="retIlss"></div></div>
     <h3 class="sub">Where the hybrids sit</h3>
@@ -277,7 +295,7 @@ input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 
     <div class="checks" id="checksList"></div>
   </section>
 
-  <footer class="foot">
+  <footer class="foot section" id="about">
     <div><strong>Basalt–Carbon Aging Lab</strong> is an interactive companion to the final-year project <em id="footTitle"></em>, by <span id="footTeam"></span>, supervised by <span id="footSup"></span>, <span id="footInst"></span>.</div>
     <div>Data transcribed from the report's tables; models are labelled. Built with Three.js. <a href="https://github.com/Shahroz657/composite-aging-lab">Source</a> · <a href="https://machine-atlas-ecru.vercel.app/">Machine Atlas</a></div>
   </footer>
@@ -603,6 +621,15 @@ class Stage {
   pickable(obj, meta) { obj.traverse(o => { if (o.isMesh) { o.userData.meta = meta; this.picks.push(o); } }); return obj; }
   clearPicks() { this.picks = []; this.hovered = null; }
   label(text, pos, cls = 'lbl3d') { const d = document.createElement('div'); d.className = cls; d.textContent = text; const o = new CSS2DObject(d); o.position.copy(pos); return o; }
+  /** Persistent component tag: a leader line from `from` to `to` (world positions) and a label at `to`. Returns a group to add to the scene. */
+  tag(text, from, to) {
+    const g = new THREE.Group();
+    const geo = new THREE.BufferGeometry().setFromPoints([from, to]);
+    g.add(new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0x5f6a73, transparent: true, opacity: 0.8 })));
+    const dot = new THREE.Mesh(new THREE.SphereGeometry(2.2, 10, 8), new THREE.MeshBasicMaterial({ color: 0x5f6a73 })); dot.position.copy(from); g.add(dot);
+    g.add(this.label(text, to, 'lbl3d tag')); g.userData.tag = true; return g;
+  }
+  setTags(on) { this.container.classList.toggle('nolabels', !on); this.scene.traverse(o => { if (o.userData.tag) o.visible = on; }); }
   fit(center, radius, dir = [1, 0.6, 1.2], groundY) {
     const d = new THREE.Vector3(...dir).normalize(); const dist = (radius * 1.15) / Math.sin((this.camera.fov / 2) * Math.PI / 180);
     this.camera.position.copy(center).addScaledVector(d, dist); this.controls.target.copy(center); this.controls.update();
@@ -671,6 +698,8 @@ function buildHygroChamber(stage) {
   const led = new THREE.Mesh(new THREE.SphereGeometry(5, 16, 12), new THREE.MeshStandardMaterial({ color: 0x40ff60, emissive: 0x20c040, emissiveIntensity: 1 })); led.position.set(170, H + 28, S / 2 - 26); g.add(led);
   stage.onFrame(dt => { for (const f of fans) f.rotation.x += dt * 12; mist.material.opacity = 0.25 + 0.12 * Math.sin(performance.now() / 400); });
   g.add(stage.label('Hygro-thermal chamber', new THREE.Vector3(0, H + 70, 0), 'lbl3d caption'));
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  [['Temp / humidity sensor (DHT11)', V(0, H - 30, -120), V(-190, H + 40, -260)], ['Ventilation fan 1', V(-S / 2 + 20, H * 0.78, 0), V(-330, H * 0.9, 120)], ['Heating element', V(60, H * 0.62, 90), V(330, H * 0.75, 200)], ['Ventilation fan 2', V(S / 2 - 20, H * 0.25, 0), V(330, H * 0.3, 140)], ['Mist maker (humidifier)', V(-110, 60, 110), V(-330, 40, 250)], ['Perforated shelf with specimens', V(-40, H * 0.5, -60), V(-330, H * 0.55, -220)], ['Controller: Arduino + ESP8266', V(120, H + 28, S / 2 - 30), V(300, H + 110, S / 2 + 60)], ['Acrylic door', V(0, H * 0.35, S / 2 + 2), V(120, -40, S / 2 + 160)]].forEach(([t, a, b]) => g.add(stage.tag(t, a, b)));
   stage.scene.add(g); stage.fit(new THREE.Vector3(0, H / 2 + 10, 0), 330, [1, 0.55, 1.1]);
   return { g, heater, led };
 }
@@ -693,6 +722,8 @@ function buildHydroTub(stage) {
   const ctl = new THREE.Mesh(new THREE.BoxGeometry(90, 40, 60), plastic(0x1d5a8f)); ctl.position.set(R + 80, 20, 0); g.add(stage.pickable(ctl, { name: 'Controller: Arduino, relay, LCD, SD logger', desc: 'Reads the probe, switches the heater, shows the temperature on an LCD and writes a time-stamped log to the SD card.' }));
   stage.onFrame((dt, t) => { water.position.y = H * 0.39 + Math.sin(t * 1.3) * 0.6; });
   g.add(stage.label('Hydro-thermal bath', new THREE.Vector3(0, H + 60, 0), 'lbl3d caption'));
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  [['DS18B20 temperature probe', V(-120, H - 60, -40), V(-260, H + 90, -140)], ['Lid with ventilation holes', V(0, H + 6, 0), V(200, H + 110, -120)], ['1 kW immersion heater', V(90, 60, 0), V(330, 40, 120)], ['Heated saline water', V(-150, H * 0.5, 120), V(-250, H * 0.2, 300)], ['Specimen rack', V(-40, 110, 70), V(-120, H + 30, 300)], ['Polypropylene tub', V(R * 0.9, H * 0.3, 60), V(R + 120, H * 0.15, 220)], ['Controller: Arduino, relay, SD logger', V(R + 80, 40, 0), V(R + 130, 130, -80)]].forEach(([t, a, b]) => g.add(stage.tag(t, a, b)));
   stage.scene.add(g); stage.fit(new THREE.Vector3(30, H / 2, 0), 330, [1, 0.6, 1.1]);
   return { g, heater: rod };
 }
@@ -746,6 +777,20 @@ const layupNotation = m => { const runs = []; for (const k of m.layup) { const l
 try { const t = localStorage.getItem('lab-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch {}
 $('themeBtn').addEventListener('click', () => { const next = dark() ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', next); try { localStorage.setItem('lab-theme', next); } catch {} renderCharts(); });
 
+// ---------- sections (tabs) ----------
+const SECTIONS = ['overview', 'laminates', 'rigs', 'moisture', 'tests', 'results', 'checks'];
+function showSection(id) {
+  if (!SECTIONS.includes(id)) id = 'overview';
+  document.querySelectorAll('main > .section').forEach(sec => sec.classList.toggle('active', sec.id === id || (id === 'checks' && sec.id === 'about')));
+  document.querySelectorAll('#sectionNav a').forEach(a => a.classList.toggle('on', a.dataset.section === id));
+  window.scrollTo(0, 0);
+  if (location.hash.slice(1) !== id) history.replaceState(null, '', '#' + id);
+  window.dispatchEvent(new Event('resize'));
+}
+document.getElementById('sectionNav').addEventListener('click', e => { const a = e.target.closest('a'); if (!a) return; e.preventDefault(); showSection(a.dataset.section); });
+document.querySelector('.brand').addEventListener('click', e => { e.preventDefault(); showSection('overview'); });
+window.addEventListener('hashchange', () => showSection(location.hash.slice(1)));
+
 // ---------- 3D tooltip ----------
 const tip = $('tip3d');
 function hoverTip(meta, xy, stageEl) {
@@ -762,6 +807,8 @@ const stackStage = new Stage($('stackStage'), { autoRotate: true, autoRotateSpee
 const stacks = buildStacks(stackStage, MATERIALS);
 
 // ---------- laminate cards ----------
+const laminateStage = new Stage($('laminateStage'), { autoRotate: true, autoRotateSpeed: 0.4, onHover: (m, xy) => hoverTip(m, xy, $('laminateStage')) });
+const stacks2 = buildStacks(laminateStage, MATERIALS);
 const cards = $('laminateCards'); let exploded = null;
 MATERIALS.forEach(m => {
   const c = document.createElement('button'); c.className = 'card'; c.dataset.id = m.id;
@@ -769,7 +816,7 @@ MATERIALS.forEach(m => {
     <div class="stack">${m.layup.slice().reverse().map(k => `<i class="${k}"></i>`).join('')}</div>
     <div class="kv"><span>Layup</span><span class="mono">${layupNotation(m)}</span><span>Basalt share</span><span class="mono">${Math.round(m.basalt * 100)}%</span><span>Flexural modulus</span><span class="mono">${fmt(meanFlex(m.id, 0, 'E'), 1)} GPa</span><span>Flexural strength</span><span class="mono">${fmt(meanFlex(m.id, 0, 'sigma'))} MPa</span><span>ILSS</span><span class="mono">${fmt(meanIlss(m.id, 0), 1)} MPa</span></div>
     <p>${m.blurb}</p>`;
-  c.addEventListener('click', () => { exploded = exploded === m.id ? null : m.id; cards.querySelectorAll('.card').forEach(x => x.classList.toggle('on', x.dataset.id === exploded)); stacks.stacks.forEach(s => { s.target = s.mat.id === exploded ? 1.1 : (exploded ? 0.15 : 0.55); }); stackStage.controls.autoRotate = false; });
+  c.addEventListener('click', () => { exploded = exploded === m.id ? null : m.id; cards.querySelectorAll('.card').forEach(x => x.classList.toggle('on', x.dataset.id === exploded)); [stacks, stacks2].forEach(st => st.stacks.forEach(s => { s.target = s.mat.id === exploded ? 1.1 : (exploded ? 0.15 : 0.55); })); laminateStage.controls.autoRotate = false; });
   cards.appendChild(c);
 });
 
@@ -788,7 +835,8 @@ function showRig(id) {
   $('rigParts').innerHTML = [...seen.values()].map(m => `<li data-name="${m.name}"><b>${m.name}</b> · ${m.desc}</li>`).join('');
   ctl.T = 25; ctl.on = false; ctl.hist = []; ctl.set = RIGS[id].setpoint;
 }
-$('rigTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $('rigTabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); showRig(b.dataset.rig); });
+$('rigTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $('rigTabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); showRig(b.dataset.rig); rigStage.setTags($('labelsToggle').checked); });
+$('labelsToggle').addEventListener('change', () => rigStage.setTags($('labelsToggle').checked));
 // controller simulation: first-order thermal plant with relay hysteresis
 const ctl = { T: 25, on: false, hist: [], set: 60, t: 0 };
 setInterval(() => {
@@ -925,7 +973,8 @@ $('checksList').innerHTML = [
 ].map(([tag, title, body]) => `<div class="check"><div class="tag">${tag}</div><div><h4>${title}</h4><p>${body}</p></div></div>`).join('');
 // footer
 $('footTitle').textContent = STUDY.title; $('footTeam').textContent = STUDY.team.join(', '); $('footSup').textContent = `${STUDY.supervisor} (with ${STUDY.coSupervisor})`; $('footInst').textContent = `${STUDY.institute}, ${STUDY.year}`;
-window.lab = { stackStage, rigStage, testStage, ts };
+showSection(location.hash.slice(1) || 'overview');
+window.lab = { stackStage, laminateStage, rigStage, testStage, ts, showSection };
 
 return {  };
 })();

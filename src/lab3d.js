@@ -62,6 +62,15 @@ export class Stage {
   pickable(obj, meta) { obj.traverse(o => { if (o.isMesh) { o.userData.meta = meta; this.picks.push(o); } }); return obj; }
   clearPicks() { this.picks = []; this.hovered = null; }
   label(text, pos, cls = 'lbl3d') { const d = document.createElement('div'); d.className = cls; d.textContent = text; const o = new CSS2DObject(d); o.position.copy(pos); return o; }
+  /** Persistent component tag: a leader line from `from` to `to` (world positions) and a label at `to`. Returns a group to add to the scene. */
+  tag(text, from, to) {
+    const g = new THREE.Group();
+    const geo = new THREE.BufferGeometry().setFromPoints([from, to]);
+    g.add(new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0x5f6a73, transparent: true, opacity: 0.8 })));
+    const dot = new THREE.Mesh(new THREE.SphereGeometry(2.2, 10, 8), new THREE.MeshBasicMaterial({ color: 0x5f6a73 })); dot.position.copy(from); g.add(dot);
+    g.add(this.label(text, to, 'lbl3d tag')); g.userData.tag = true; return g;
+  }
+  setTags(on) { this.container.classList.toggle('nolabels', !on); this.scene.traverse(o => { if (o.userData.tag) o.visible = on; }); }
   fit(center, radius, dir = [1, 0.6, 1.2], groundY) {
     const d = new THREE.Vector3(...dir).normalize(); const dist = (radius * 1.15) / Math.sin((this.camera.fov / 2) * Math.PI / 180);
     this.camera.position.copy(center).addScaledVector(d, dist); this.controls.target.copy(center); this.controls.update();
@@ -130,6 +139,8 @@ export function buildHygroChamber(stage) {
   const led = new THREE.Mesh(new THREE.SphereGeometry(5, 16, 12), new THREE.MeshStandardMaterial({ color: 0x40ff60, emissive: 0x20c040, emissiveIntensity: 1 })); led.position.set(170, H + 28, S / 2 - 26); g.add(led);
   stage.onFrame(dt => { for (const f of fans) f.rotation.x += dt * 12; mist.material.opacity = 0.25 + 0.12 * Math.sin(performance.now() / 400); });
   g.add(stage.label('Hygro-thermal chamber', new THREE.Vector3(0, H + 70, 0), 'lbl3d caption'));
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  [['Temp / humidity sensor (DHT11)', V(0, H - 30, -120), V(-190, H + 40, -260)], ['Ventilation fan 1', V(-S / 2 + 20, H * 0.78, 0), V(-330, H * 0.9, 120)], ['Heating element', V(60, H * 0.62, 90), V(330, H * 0.75, 200)], ['Ventilation fan 2', V(S / 2 - 20, H * 0.25, 0), V(330, H * 0.3, 140)], ['Mist maker (humidifier)', V(-110, 60, 110), V(-330, 40, 250)], ['Perforated shelf with specimens', V(-40, H * 0.5, -60), V(-330, H * 0.55, -220)], ['Controller: Arduino + ESP8266', V(120, H + 28, S / 2 - 30), V(300, H + 110, S / 2 + 60)], ['Acrylic door', V(0, H * 0.35, S / 2 + 2), V(120, -40, S / 2 + 160)]].forEach(([t, a, b]) => g.add(stage.tag(t, a, b)));
   stage.scene.add(g); stage.fit(new THREE.Vector3(0, H / 2 + 10, 0), 330, [1, 0.55, 1.1]);
   return { g, heater, led };
 }
@@ -152,6 +163,8 @@ export function buildHydroTub(stage) {
   const ctl = new THREE.Mesh(new THREE.BoxGeometry(90, 40, 60), plastic(0x1d5a8f)); ctl.position.set(R + 80, 20, 0); g.add(stage.pickable(ctl, { name: 'Controller: Arduino, relay, LCD, SD logger', desc: 'Reads the probe, switches the heater, shows the temperature on an LCD and writes a time-stamped log to the SD card.' }));
   stage.onFrame((dt, t) => { water.position.y = H * 0.39 + Math.sin(t * 1.3) * 0.6; });
   g.add(stage.label('Hydro-thermal bath', new THREE.Vector3(0, H + 60, 0), 'lbl3d caption'));
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  [['DS18B20 temperature probe', V(-120, H - 60, -40), V(-260, H + 90, -140)], ['Lid with ventilation holes', V(0, H + 6, 0), V(200, H + 110, -120)], ['1 kW immersion heater', V(90, 60, 0), V(330, 40, 120)], ['Heated saline water', V(-150, H * 0.5, 120), V(-250, H * 0.2, 300)], ['Specimen rack', V(-40, 110, 70), V(-120, H + 30, 300)], ['Polypropylene tub', V(R * 0.9, H * 0.3, 60), V(R + 120, H * 0.15, 220)], ['Controller: Arduino, relay, SD logger', V(R + 80, 40, 0), V(R + 130, 130, -80)]].forEach(([t, a, b]) => g.add(stage.tag(t, a, b)));
   stage.scene.add(g); stage.fit(new THREE.Vector3(30, H / 2, 0), 330, [1, 0.6, 1.1]);
   return { g, heater: rod };
 }

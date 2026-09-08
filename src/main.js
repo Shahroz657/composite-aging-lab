@@ -14,6 +14,20 @@ const layupNotation = m => { const runs = []; for (const k of m.layup) { const l
 try { const t = localStorage.getItem('lab-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch {}
 $('themeBtn').addEventListener('click', () => { const next = dark() ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', next); try { localStorage.setItem('lab-theme', next); } catch {} renderCharts(); });
 
+// ---------- sections (tabs) ----------
+const SECTIONS = ['overview', 'laminates', 'rigs', 'moisture', 'tests', 'results', 'checks'];
+function showSection(id) {
+  if (!SECTIONS.includes(id)) id = 'overview';
+  document.querySelectorAll('main > .section').forEach(sec => sec.classList.toggle('active', sec.id === id || (id === 'checks' && sec.id === 'about')));
+  document.querySelectorAll('#sectionNav a').forEach(a => a.classList.toggle('on', a.dataset.section === id));
+  window.scrollTo(0, 0);
+  if (location.hash.slice(1) !== id) history.replaceState(null, '', '#' + id);
+  window.dispatchEvent(new Event('resize'));
+}
+document.getElementById('sectionNav').addEventListener('click', e => { const a = e.target.closest('a'); if (!a) return; e.preventDefault(); showSection(a.dataset.section); });
+document.querySelector('.brand').addEventListener('click', e => { e.preventDefault(); showSection('overview'); });
+window.addEventListener('hashchange', () => showSection(location.hash.slice(1)));
+
 // ---------- 3D tooltip ----------
 const tip = $('tip3d');
 function hoverTip(meta, xy, stageEl) {
@@ -30,6 +44,8 @@ const stackStage = new Stage($('stackStage'), { autoRotate: true, autoRotateSpee
 const stacks = buildStacks(stackStage, MATERIALS);
 
 // ---------- laminate cards ----------
+const laminateStage = new Stage($('laminateStage'), { autoRotate: true, autoRotateSpeed: 0.4, onHover: (m, xy) => hoverTip(m, xy, $('laminateStage')) });
+const stacks2 = buildStacks(laminateStage, MATERIALS);
 const cards = $('laminateCards'); let exploded = null;
 MATERIALS.forEach(m => {
   const c = document.createElement('button'); c.className = 'card'; c.dataset.id = m.id;
@@ -37,7 +53,7 @@ MATERIALS.forEach(m => {
     <div class="stack">${m.layup.slice().reverse().map(k => `<i class="${k}"></i>`).join('')}</div>
     <div class="kv"><span>Layup</span><span class="mono">${layupNotation(m)}</span><span>Basalt share</span><span class="mono">${Math.round(m.basalt * 100)}%</span><span>Flexural modulus</span><span class="mono">${fmt(meanFlex(m.id, 0, 'E'), 1)} GPa</span><span>Flexural strength</span><span class="mono">${fmt(meanFlex(m.id, 0, 'sigma'))} MPa</span><span>ILSS</span><span class="mono">${fmt(meanIlss(m.id, 0), 1)} MPa</span></div>
     <p>${m.blurb}</p>`;
-  c.addEventListener('click', () => { exploded = exploded === m.id ? null : m.id; cards.querySelectorAll('.card').forEach(x => x.classList.toggle('on', x.dataset.id === exploded)); stacks.stacks.forEach(s => { s.target = s.mat.id === exploded ? 1.1 : (exploded ? 0.15 : 0.55); }); stackStage.controls.autoRotate = false; });
+  c.addEventListener('click', () => { exploded = exploded === m.id ? null : m.id; cards.querySelectorAll('.card').forEach(x => x.classList.toggle('on', x.dataset.id === exploded)); [stacks, stacks2].forEach(st => st.stacks.forEach(s => { s.target = s.mat.id === exploded ? 1.1 : (exploded ? 0.15 : 0.55); })); laminateStage.controls.autoRotate = false; });
   cards.appendChild(c);
 });
 
@@ -56,7 +72,8 @@ function showRig(id) {
   $('rigParts').innerHTML = [...seen.values()].map(m => `<li data-name="${m.name}"><b>${m.name}</b> · ${m.desc}</li>`).join('');
   ctl.T = 25; ctl.on = false; ctl.hist = []; ctl.set = RIGS[id].setpoint;
 }
-$('rigTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $('rigTabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); showRig(b.dataset.rig); });
+$('rigTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $('rigTabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); showRig(b.dataset.rig); rigStage.setTags($('labelsToggle').checked); });
+$('labelsToggle').addEventListener('change', () => rigStage.setTags($('labelsToggle').checked));
 // controller simulation: first-order thermal plant with relay hysteresis
 const ctl = { T: 25, on: false, hist: [], set: 60, t: 0 };
 setInterval(() => {
@@ -193,4 +210,5 @@ $('checksList').innerHTML = [
 ].map(([tag, title, body]) => `<div class="check"><div class="tag">${tag}</div><div><h4>${title}</h4><p>${body}</p></div></div>`).join('');
 // footer
 $('footTitle').textContent = STUDY.title; $('footTeam').textContent = STUDY.team.join(', '); $('footSup').textContent = `${STUDY.supervisor} (with ${STUDY.coSupervisor})`; $('footInst').textContent = `${STUDY.institute}, ${STUDY.year}`;
-window.lab = { stackStage, rigStage, testStage, ts };
+showSection(location.hash.slice(1) || 'overview');
+window.lab = { stackStage, laminateStage, rigStage, testStage, ts, showSection };
