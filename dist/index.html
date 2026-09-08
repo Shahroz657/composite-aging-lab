@@ -706,7 +706,7 @@ function buildHygroChamber(stage) {
   stage.onFrame(dt => { for (const f of fans) f.rotation.x += dt * 12; mist.material.opacity = 0.25 + 0.12 * Math.sin(performance.now() / 400); });
   g.add(stage.label('Hygro-thermal chamber', new THREE.Vector3(0, H + 170, 0), 'lbl3d caption'));
   const V = (x, y, z) => new THREE.Vector3(x, y, z);
-  [['Temp / humidity sensor (DHT11)', V(0, H - 30, -120), V(150, H + 90, -230)], ['Ventilation fan 1', V(-S / 2 + 20, H * 0.78, 0), V(-240, H * 0.98, 160)], ['Heating element', V(60, H * 0.62, 90), V(250, H * 0.72, 220)], ['Ventilation fan 2', V(S / 2 - 20, H * 0.25, 0), V(250, H * 0.2, 180)], ['Mist maker (humidifier)', V(-110, 60, 110), V(-200, -30, 300)], ['Perforated shelf with specimens', V(-40, H * 0.5, -60), V(-240, H * 0.5, -240)], ['Controller: Arduino + ESP8266', V(120, H + 28, S / 2 - 30), V(240, H + 30, S / 2 + 90)], ['Acrylic door', V(0, H * 0.35, S / 2 + 2), V(60, 30, S / 2 + 110)]].forEach(([t, a, b]) => g.add(stage.tag(t, a, b)));
+  [['Temp / humidity sensor (DHT11)', V(0, H - 30, -120), V(150, H + 90, -230)], ['Ventilation fan 1', V(-S / 2 + 20, H * 0.78, 0), V(-240, H * 0.98, 160)], ['Heating element', V(60, H * 0.62, 90), V(250, H * 0.72, 220)], ['Ventilation fan 2', V(S / 2 - 20, H * 0.25, 0), V(250, H * 0.2, 180)], ['Mist maker (humidifier)', V(-110, 60, 110), V(-200, -30, 300)], ['Perforated shelf with specimens', V(-40, H * 0.5, -60), V(-270, H * 0.5, 40)], ['Controller: Arduino + ESP8266', V(120, H + 28, S / 2 - 30), V(300, H + 110, 40)], ['Acrylic door', V(0, H * 0.35, S / 2 + 2), V(60, 30, S / 2 + 110)]].forEach(([t, a, b]) => g.add(stage.tag(t, a, b)));
   stage.scene.add(g); stage.fit(new THREE.Vector3(0, H / 2 + 10, 0), 330, [1, 0.55, 1.1]);
   return { g, heater, led };
 }
