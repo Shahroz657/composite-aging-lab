@@ -162,6 +162,7 @@ input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 
 .check .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); padding-top: 3px; }
 .check h4 { margin: 0 0 4px; font-size: 14px; }
 .check p { margin: 0; font-size: 13.5px; color: var(--ink-2); }
+.check p a { color: var(--accent); }
 .check table { border-collapse: collapse; font-size: 12px; margin-top: 8px; }
 .check td, .check th { padding: 3px 8px 3px 0; text-align: left; border-top: 1px solid var(--line); }
 .check th { color: var(--ink-3); font-weight: 500; }
