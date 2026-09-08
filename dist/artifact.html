@@ -1,0 +1,933 @@
+<title>Basalt–Carbon Aging Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #f4f5f4; --surface: #fcfcfb; --surface-2: #eef0ee; --line: rgba(20, 30, 36, 0.10); --line-strong: rgba(20, 30, 36, 0.18);
+  --ink: #14181c; --ink-2: #4d5760; --ink-3: #8a9299; --accent: #1f8a8f; --accent-soft: rgba(31, 138, 143, 0.14);
+  --grid: #e1e0d9; --baseline: #c3c2b7; --carbon: #2c3035; --basalt: #b08a3e;
+  --font: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif; --mono: "IBM Plex Mono", Menlo, Consolas, monospace;
+  --shadow: 0 1px 2px rgba(15, 23, 32, 0.05), 0 10px 30px -14px rgba(15, 23, 32, 0.2);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #131517; --surface: #1a1c1f; --surface-2: #23262a; --line: rgba(255,255,255,0.09); --line-strong: rgba(255,255,255,0.18); --ink: #eaedef; --ink-2: #aab3ba; --ink-3: #6f7a83; --accent: #3fb3b8; --accent-soft: rgba(63,179,184,0.18); --grid: #2c2c2a; --baseline: #383835; --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -14px rgba(0,0,0,0.6); color-scheme: dark; } }
+:root[data-theme="dark"] { --bg: #131517; --surface: #1a1c1f; --surface-2: #23262a; --line: rgba(255,255,255,0.09); --line-strong: rgba(255,255,255,0.18); --ink: #eaedef; --ink-2: #aab3ba; --ink-3: #6f7a83; --accent: #3fb3b8; --accent-soft: rgba(63,179,184,0.18); --grid: #2c2c2a; --baseline: #383835; --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -14px rgba(0,0,0,0.6); color-scheme: dark; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.lbl { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+.hidden { display: none !important; }
+
+.topnav { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 20px; padding: 10px 24px; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 8px; font-weight: 600; text-decoration: none; }
+.brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.topnav nav { display: flex; gap: 2px; flex: 1; overflow-x: auto; }
+.topnav nav a { text-decoration: none; padding: 6px 10px; border-radius: 8px; color: var(--ink-2); font-size: 14px; white-space: nowrap; }
+.topnav nav a:hover { background: var(--surface-2); color: var(--ink); }
+.nav-right { display: flex; align-items: center; gap: 8px; }
+.ghost { text-decoration: none; font-size: 13px; color: var(--ink-2); padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; }
+.iconbtn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); font-size: 16px; }
+
+main { max-width: 1180px; margin: 0 auto; padding: 0 24px 60px; }
+.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 32px; align-items: center; padding: 48px 0 32px; }
+.eyebrow { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin-bottom: 14px; }
+h1 { font-size: clamp(28px, 3.6vw, 42px); line-height: 1.12; letter-spacing: -0.02em; margin: 0 0 16px; font-weight: 600; text-wrap: balance; }
+.lede { font-size: 16px; color: var(--ink-2); max-width: 58ch; margin: 0 0 22px; }
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.tile .v { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+.tile .l { font-size: 12px; color: var(--ink-3); }
+.hero-3d { position: relative; }
+.stage { position: relative; height: 380px; border-radius: 14px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.stage.tall { height: 440px; }
+.stage canvas { display: block; }
+.stage .labels { position: absolute; inset: 0; pointer-events: none; }
+.lbl3d { font-size: 12px; color: var(--ink-2); background: color-mix(in srgb, var(--surface) 85%, transparent); padding: 2px 7px; border-radius: 6px; white-space: nowrap; border: 1px solid var(--line); }
+.lbl3d.caption { font-weight: 500; color: var(--ink); }
+.stage-hint { font-size: 12px; color: var(--ink-3); margin-top: 6px; text-align: right; }
+.tooltip3d { position: fixed; z-index: 30; max-width: 280px; background: var(--ink); color: var(--surface); font-size: 12.5px; padding: 8px 10px; border-radius: 8px; pointer-events: none; box-shadow: var(--shadow); }
+.tooltip3d b { display: block; font-size: 13px; margin-bottom: 2px; }
+
+.section { padding: 40px 0 8px; border-top: 1px solid var(--line); margin-top: 24px; }
+.section-head { max-width: 72ch; margin-bottom: 22px; }
+.section-head h2 { font-size: 26px; letter-spacing: -0.015em; margin: 0 0 8px; font-weight: 600; text-wrap: balance; }
+.section-head p { margin: 0; color: var(--ink-2); }
+h3.sub { font-size: 15px; font-weight: 600; margin: 28px 0 10px; }
+.cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; cursor: pointer; transition: border-color .15s, transform .15s; text-align: left; }
+.card:hover, .card.on { border-color: var(--line-strong); transform: translateY(-2px); }
+.card.on { box-shadow: var(--shadow); }
+.card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.card-head .swatch { width: 10px; height: 10px; border-radius: 50%; }
+.card-head b { font-weight: 600; }
+.card-head .code { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+.stack { display: grid; grid-template-columns: 1fr; gap: 2px; margin: 8px 0 10px; }
+.stack i { display: block; height: 7px; border-radius: 2px; }
+.stack i.C { background: var(--carbon); } .stack i.B { background: var(--basalt); }
+.card .kv { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: 12.5px; margin-bottom: 8px; }
+.card .kv span:nth-child(odd) { color: var(--ink-3); }
+.card p { margin: 0; font-size: 13px; color: var(--ink-2); }
+
+.split { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 20px; align-items: start; }
+.side { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.side h3 { margin: 0 0 6px; font-size: 17px; }
+.side p { margin: 0 0 12px; color: var(--ink-2); font-size: 14px; }
+.parts { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 4px; }
+.parts li { font-size: 13px; padding: 6px 8px; border-radius: 6px; cursor: default; color: var(--ink-2); }
+.parts li b { color: var(--ink); font-weight: 500; }
+.parts li:hover, .parts li.hot { background: var(--surface-2); }
+.segmented { display: inline-flex; gap: 2px; background: var(--surface-2); border-radius: 9px; padding: 3px; margin: 0 8px 10px 0; }
+.segmented button { padding: 6px 11px; border-radius: 7px; font-size: 13px; font-weight: 500; color: var(--ink-2); white-space: nowrap; }
+.segmented button.on { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+.controls-row { display: flex; flex-wrap: wrap; align-items: center; }
+.ctl-card { border-top: 1px solid var(--line); padding-top: 12px; }
+.ctl-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.ctl-head .mono { font-size: 13px; margin-left: auto; }
+.led { width: 10px; height: 10px; border-radius: 50%; background: var(--ink-3); }
+.led.on { background: #f08a24; box-shadow: 0 0 0 3px rgba(240,138,36,0.25); }
+.ctl-svg, .stress-svg { width: 100%; height: auto; display: block; }
+.note { font-size: 12px; color: var(--ink-3); margin-top: 6px; }
+.ctl-grid { display: grid; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; align-content: start; }
+.ctl-grid label { display: grid; gap: 6px; font-size: 13px; font-weight: 500; }
+.ctl-grid label .mono { font-weight: 400; color: var(--ink-2); float: right; }
+input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 20px; background: transparent; margin: 0; }
+input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: var(--line-strong); }
+input[type=range]::-moz-range-track { height: 4px; border-radius: 2px; background: var(--line-strong); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); border: 2px solid var(--ink); margin-top: -6px; cursor: pointer; }
+input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--surface); border: 2px solid var(--ink); cursor: pointer; }
+.loadrow { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.loadrow input { flex: 1; }
+.readout { min-width: 7ch; text-align: right; font-size: 14px; }
+.btn { padding: 7px 12px; border-radius: 8px; border: 1px solid var(--line-strong); font-weight: 500; font-size: 13px; background: var(--surface); }
+.btn:hover { background: var(--surface-2); }
+.titleblock { margin: 0 0 12px; padding: 0; display: grid; grid-template-columns: max-content 1fr; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; }
+.titleblock dt, .titleblock dd { margin: 0; padding: 5px 9px; border-top: 1px solid var(--line); font-size: 12.5px; }
+.titleblock dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); background: var(--surface-2); border-right: 1px solid var(--line); }
+.titleblock dt:first-of-type, .titleblock dd:first-of-type { border-top: 0; }
+.formula { font-family: var(--mono); font-size: 12px; color: var(--ink-2); margin-top: 8px; line-height: 1.6; }
+
+.charts { display: grid; gap: 14px; }
+.charts.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.charts.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.chart { position: relative; margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 12px 8px; }
+.chart-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.chart-title { font-weight: 600; font-size: 14px; }
+.chart-unit { font-size: 12px; color: var(--ink-3); }
+.chart-svg { width: 100%; height: auto; display: block; font-family: var(--font); }
+.chart-svg .grid line { stroke: var(--grid); stroke-width: 1; }
+.chart-svg .grid .baseline { stroke: var(--baseline); }
+.chart-svg .grid .reference { stroke: var(--ink-3); stroke-width: 1; }
+.chart-svg .tick { font-size: 10.5px; fill: var(--ink-3); font-family: var(--mono); }
+.chart-svg .axis-label { font-size: 11px; fill: var(--ink-3); }
+.chart-svg .end-label { font-size: 11px; fill: var(--ink-2); }
+.chart-svg .value-label { font-size: 11px; fill: var(--ink-2); font-family: var(--mono); }
+.chart-svg .leader { stroke: var(--ink-3); stroke-width: 1; }
+.chart-svg .ring { fill: var(--surface); }
+.chart-svg .series { transition: opacity .15s; }
+.chart-svg .series.dim { opacity: 0.18; }
+.chart-svg .crosshair { stroke: var(--ink-3); stroke-width: 1; }
+.chart-svg .col.hot path { filter: brightness(1.1); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 4px; }
+.legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
+.swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.chart .tooltip { position: absolute; z-index: 5; width: 220px; background: var(--ink); color: var(--surface); font-size: 12px; padding: 8px 10px; border-radius: 8px; pointer-events: none; box-shadow: var(--shadow); }
+.tip-title { font-weight: 600; margin-bottom: 4px; }
+.tip-row { display: grid; grid-template-columns: 10px 1fr auto; gap: 6px; align-items: center; }
+.tip-row b { font-family: var(--mono); font-weight: 500; }
+.tip-row small { grid-column: 2 / -1; opacity: 0.7; font-family: var(--mono); font-size: 10.5px; }
+.chart-foot { display: flex; justify-content: flex-end; margin-top: 4px; }
+.linkbtn { font-size: 12px; color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line-strong); }
+.chart-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.chart-table th, .chart-table td { text-align: left; padding: 4px 6px; border-top: 1px solid var(--line); }
+.chart-table th { color: var(--ink-3); font-weight: 500; font-size: 11px; }
+.chart-table .num { font-family: var(--mono); text-align: right; }
+.findings { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 16px; }
+.finding { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.finding .fh { display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 6px; }
+.finding p { margin: 0; font-size: 13.5px; color: var(--ink-2); }
+.checks { display: grid; gap: 12px; }
+.check { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; grid-template-columns: 90px 1fr; gap: 14px; }
+.check .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); padding-top: 3px; }
+.check h4 { margin: 0 0 4px; font-size: 14px; }
+.check p { margin: 0; font-size: 13.5px; color: var(--ink-2); }
+.check table { border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.check td, .check th { padding: 3px 8px 3px 0; text-align: left; border-top: 1px solid var(--line); }
+.check th { color: var(--ink-3); font-weight: 500; }
+.check .num { font-family: var(--mono); text-align: right; }
+.foot { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-2); display: grid; gap: 8px; }
+
+@media (max-width: 960px) {
+  .hero { grid-template-columns: 1fr; padding-top: 28px; }
+  .cards { grid-template-columns: repeat(2, 1fr); }
+  .split { grid-template-columns: 1fr; }
+  .charts.three { grid-template-columns: 1fr; }
+  .charts.two { grid-template-columns: 1fr; }
+  .findings { grid-template-columns: 1fr; }
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .topnav nav { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+</style>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
+
+<header class="topnav">
+  <a class="brand" href="#top"><span class="dot"></span>Basalt–Carbon Aging Lab</a>
+  <nav>
+    <a href="#laminates">Laminates</a><a href="#rigs">Aging rigs</a><a href="#moisture">Moisture</a><a href="#tests">Tests</a><a href="#results">Results</a><a href="#checks">Checks</a>
+  </nav>
+  <div class="nav-right"><a class="ghost" href="https://machine-atlas-ecru.vercel.app/" target="_blank" rel="noopener">Machine Atlas ↗</a><button class="iconbtn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button></div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero-text">
+      <div class="eyebrow">Final-year project · NUST College of E&amp;ME · 2024</div>
+      <h1>What twenty days in hot salt water do to carbon, basalt, and their hybrids</h1>
+      <p class="lede">Four eight-ply laminates were laid up by hand, aged in two purpose-built IoT chambers, and broken in three-point bending and short-beam shear. This page rebuilds the study so you can turn the laminates over, watch the tests, and read every specimen.</p>
+      <div class="tiles" id="tiles"></div>
+    </div>
+    <div class="hero-3d">
+      <div class="stage" id="stackStage"></div>
+      <div class="stage-hint">Drag to orbit · hover a ply</div>
+    </div>
+  </section>
+
+  <section id="laminates" class="section">
+    <div class="section-head"><h2>Four laminates, one question</h2><p>Carbon is stiff and strong but corrodes the aluminium it touches. Basalt is inert and cheap but half as stiff. The hybrids put basalt on the faces, where the metal is, and carbon in the core, where the stiffness comes from. Click a laminate to explode its stack above.</p></div>
+    <div class="cards" id="laminateCards"></div>
+  </section>
+
+  <section id="rigs" class="section">
+    <div class="section-head"><h2>Two home-built aging rigs</h2><p>Both chambers were designed in SolidWorks and run by Arduino-class controllers with relays, sensors and cloud logging. Hover the components.</p></div>
+    <div class="split">
+      <div>
+        <div class="segmented" id="rigTabs"><button class="on" data-rig="hydro">Hydro-thermal bath</button><button data-rig="hygro">Hygro-thermal chamber</button></div>
+        <div class="stage tall" id="rigStage"></div>
+        <div class="stage-hint">Drag to orbit · hover a component</div>
+      </div>
+      <aside class="side">
+        <h3 id="rigTitle">Hydro-thermal bath</h3>
+        <p id="rigDesc"></p>
+        <ul class="parts" id="rigParts"></ul>
+        <div class="ctl-card">
+          <div class="ctl-head"><span class="lbl">Controller loop</span><span class="mono" id="ctlReadout"></span><span class="led" id="ctlLed"></span></div>
+          <svg id="ctlChart" viewBox="0 0 320 110" class="ctl-svg" role="img" aria-label="Simulated bath temperature under relay control"></svg>
+          <div class="note">Simulated bang-bang control with a 1 °C hysteresis band, drawn to show how the rig holds its setpoint. Not logged data.</div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="moisture" class="section">
+    <div class="section-head"><h2>Why aging is slow, and why it matters</h2><p>Water enters epoxy by diffusion. For a laminate a few millimetres thick at typical diffusivities, ten or twenty days is far from saturation, so the aged coupons were wet at the surface and still dry in the core. The model below is Fick's law for a plate wetted from both faces. It is a model, not something the project measured.</p></div>
+    <div class="split">
+      <div class="ctl-grid">
+        <label>Diffusivity <span class="mono" id="dVal"></span><input type="range" id="dSlider" min="-7" max="-5.7" step="0.01" value="-6.3"></label>
+        <label>Thickness <span class="mono" id="hVal"></span><input type="range" id="hSlider" min="2" max="6" step="0.1" value="3.8"></label>
+        <label>Saturation uptake <span class="mono" id="mVal"></span><input type="range" id="mSlider" min="0.5" max="3" step="0.1" value="1.5"></label>
+        <label>Day shown in the profile <span class="mono" id="tVal"></span><input type="range" id="tSlider" min="0" max="120" step="1" value="20"></label>
+      </div>
+      <div class="charts two"><div id="uptakeChart"></div><div id="profileChart"></div></div>
+    </div>
+  </section>
+
+  <section id="tests" class="section">
+    <div class="section-head"><h2>Breaking the coupons</h2><p>Every specimen in the report can be loaded here with its own length, width, thickness, modulus and failure load. Deflection is exaggerated so you can see it. At the failure load the coupon cracks where that test says it should: the tension face in bending, the mid-plane in short-beam shear.</p></div>
+    <div class="split">
+      <div>
+        <div class="controls-row">
+          <div class="segmented" id="testTabs"><button class="on" data-test="flex">Three-point flexure · D7264</button><button data-test="ilss">Short-beam shear · D2344</button></div>
+        </div>
+        <div class="controls-row">
+          <div class="segmented" id="matTabs"></div>
+          <div class="segmented" id="stageTabs"></div>
+          <div class="segmented" id="specTabs"><button class="on" data-n="1">Specimen 1</button><button data-n="2">Specimen 2</button></div>
+        </div>
+        <div class="stage tall" id="testStage"></div>
+        <div class="loadrow"><span class="lbl">Load</span><input type="range" id="loadSlider" min="0" max="1.02" step="0.005" value="0"><span class="mono readout" id="loadReadout">0 N</span><button class="btn" id="runTest">Run to failure</button></div>
+      </div>
+      <aside class="side">
+        <h3 id="specTitle"></h3>
+        <dl class="titleblock" id="specBlock"></dl>
+        <svg id="stressChart" viewBox="0 0 320 150" class="stress-svg" role="img" aria-label="Stress through the thickness"></svg>
+        <div class="formula" id="formula"></div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="results" class="section">
+    <div class="section-head"><h2>What aging did</h2><p>Means of two specimens per point, with both specimens shown as small dots. Hover for values, or open the table under each chart.</p></div>
+    <div class="charts three"><div id="strengthChart"></div><div id="modulusChart"></div><div id="ilssChart"></div></div>
+    <div class="findings" id="findings"></div>
+    <h3 class="sub">Retained after 20 days, as a share of the un-aged mean</h3>
+    <div class="charts three"><div id="retStrength"></div><div id="retModulus"></div><div id="retIlss"></div></div>
+    <h3 class="sub">Where the hybrids sit</h3>
+    <div class="charts three"><div id="hybridModulus"></div><div id="hybridStrength"></div><div id="referenceChart"></div></div>
+  </section>
+
+  <section id="checks" class="section">
+    <div class="section-head"><h2>Checks and caveats</h2><p>Things a careful reader should know before quoting a number from this study.</p></div>
+    <div class="checks" id="checksList"></div>
+  </section>
+
+  <footer class="foot">
+    <div><strong>Basalt–Carbon Aging Lab</strong> is an interactive companion to the final-year project <em id="footTitle"></em>, by <span id="footTeam"></span>, supervised by <span id="footSup"></span>, <span id="footInst"></span>.</div>
+    <div>Data transcribed from the report's tables; models are labelled. Built with Three.js. <a href="https://github.com/Shahroz657/composite-aging-lab">Source</a> · <a href="https://machine-atlas-ecru.vercel.app/">Machine Atlas</a></div>
+  </footer>
+</main>
+<div class="tooltip3d hidden" id="tip3d"></div>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+const __data = (() => {
+// All measured values are transcribed from the FYP report tables (Report-Final Defense, NUST CEME 2024).
+// Nothing here is modelled or smoothed; models live in moisture.js and are labelled as such in the page.
+
+const STAGES = [
+  { id: 0, days: 0, label: 'Un-aged', short: '0 d' },
+  { id: 1, days: 10, label: '10 days aged', short: '10 d' },
+  { id: 2, days: 20, label: '20 days aged', short: '20 d' },
+];
+
+// Categorical slots follow the validated palette order (blue, orange, aqua, yellow); identity never changes with filtering.
+const MATERIALS = [
+  { id: 'CFRP', code: 'PC', name: 'Carbon (CFRP)', layup: ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'], basalt: 0, color: '#2a78d6', colorDark: '#3987e5',
+    blurb: 'Eight carbon plies in epoxy. The stiffest and strongest of the four, and the reference the hybrids are measured against. Its weakness is not mechanical: carbon is electrically conductive and noble, so it drives galvanic corrosion of any aluminium or steel it touches.' },
+  { id: 'HCB161', code: 'HCB161', name: 'Hybrid 1-6-1', layup: ['B', 'C', 'C', 'C', 'C', 'C', 'C', 'B'], basalt: 0.25, color: '#eb6834', colorDark: '#d95926',
+    blurb: 'One basalt ply on each face over a six-ply carbon core. The basalt skins insulate the carbon from any metal in contact, so the galvanic couple is broken, at the cost of the outermost plies, which carry the highest bending stress.' },
+  { id: 'HCB242', code: 'HCB242', name: 'Hybrid 2-4-2', layup: ['B', 'B', 'C', 'C', 'C', 'C', 'B', 'B'], basalt: 0.5, color: '#1baf7a', colorDark: '#199e70',
+    blurb: 'Two basalt plies on each face over a four-ply carbon core. Half the fibre is basalt, so the laminate is cheaper and fully isolated, and about half as stiff in bending as pure carbon.' },
+  { id: 'BFRP', code: 'PB', name: 'Basalt (BFRP)', layup: ['B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'], basalt: 1, color: '#eda100', colorDark: '#c98500',
+    blurb: 'Eight basalt plies in epoxy. Basalt fibre is spun from molten volcanic rock: inert, non-conductive, cheaper than carbon, with about 40% of its stiffness. It is the corrosion-proof end of the hybrid spectrum.' },
+];
+const MAT = Object.fromEntries(MATERIALS.map(m => [m.id, m]));
+
+// Three-point flexure, ASTM D7264 procedure A as run: span 88 mm, loading nose and supports r = 5 mm, 5 mm/min.
+// Columns: material, stage, specimen no., length, width, height (mm), failure load (N), reported strength (MPa), reported modulus (GPa)
+const F = [
+  ['CFRP', 0, 1, 111.69, 16.86, 4.05, 591, 564.19, 42.59], ['CFRP', 0, 2, 110.59, 17.72, 3.88, 602, 595.76, 43.62],
+  ['HCB161', 0, 1, 112.52, 17.61, 3.76, 506, 536.56, 32.76], ['HCB161', 0, 2, 112.64, 17.83, 3.73, 412, 438.46, 32.59],
+  ['HCB242', 0, 1, 146.19, 17.66, 3.72, 485, 702.54, 23.95], ['HCB242', 0, 2, 145.54, 17.77, 3.78, 488, 680.38, 23.97],
+  ['BFRP', 0, 1, 110.72, 17.77, 3.88, 550, 542.77, 18.06], ['BFRP', 0, 2, 110.85, 17.73, 3.84, 575, 580.63, 15.61],
+  ['CFRP', 1, 1, 112.23, 17.84, 3.94, 732, 697.79, 50.12], ['CFRP', 1, 2, 112.28, 17.87, 3.95, 721, 682.69, 50.43],
+  ['HCB161', 1, 1, 113.18, 17.99, 3.63, 475, 529.00, 35.64], ['HCB161', 1, 2, 113.32, 18.08, 3.75, 528, 548.25, 34.31],
+  ['HCB242', 1, 1, 147.08, 17.97, 3.66, 380, 558.83, 22.38], ['HCB242', 1, 2, 147.01, 17.90, 3.89, 426, 556.75, 20.27],
+  ['BFRP', 1, 1, 112.59, 18.04, 3.98, 533, 492.41, 15.43], ['BFRP', 1, 2, 111.45, 18.05, 3.78, 506, 517.96, 15.38],
+  ['CFRP', 2, 1, 110.65, 17.92, 3.72, 555, 590.84, 53.00], ['CFRP', 2, 2, 112.76, 17.85, 3.92, 642, 617.91, 49.91],
+  ['HCB161', 2, 1, 113.06, 17.98, 3.62, 431, 482.92, 34.16], ['HCB161', 2, 2, 114.15, 17.86, 3.48, 409, 499.21, 38.48],
+  ['HCB242', 2, 1, 146.51, 17.88, 4.03, 395, 481.53, 18.95], ['HCB242', 2, 2, 146.61, 17.65, 4.10, 389, 464.18, 18.23],
+  ['BFRP', 2, 1, 111.88, 17.98, 3.96, 479, 448.50, 15.56], ['BFRP', 2, 2, 110.28, 17.33, 3.82, 399, 416.54, 15.34],
+];
+const FLEX = F.map(([m, s, n, L, b, h, P, sigma, E]) => ({ mat: m, stage: s, n, L, b, h, P, sigma, E, span: 88 }));
+
+// Short-beam shear (ILSS), ASTM D2344: span 4 × thickness, loading nose r = 3 mm, supports r = 1.5 mm.
+// Columns: material, stage, specimen no., length, width, height (mm), failure load (N), reported ILSS (MPa)
+const S = [
+  ['CFRP', 0, 1, 23.99, 17.65, 3.28, 1860, 48.19], ['CFRP', 0, 2, 23.19, 17.58, 3.58, 1785, 42.54],
+  ['HCB161', 0, 1, 23.49, 17.81, 3.52, 1640, 39.24], ['HCB161', 0, 2, 23.96, 18.13, 3.46, 1680, 40.17],
+  ['HCB242', 0, 1, 23.47, 17.79, 3.43, 1220, 29.99], ['HCB242', 0, 2, 23.66, 17.91, 3.52, 1350, 32.12],
+  ['BFRP', 0, 1, 23.55, 17.81, 3.91, 1330, 28.65], ['BFRP', 0, 2, 23.75, 17.89, 4.06, 1280, 26.43],
+  ['CFRP', 1, 1, 23.75, 17.84, 3.55, 1809, 42.85], ['CFRP', 1, 2, 23.75, 17.64, 3.60, 1848, 43.65],
+  ['HCB161', 1, 1, 23.75, 17.74, 3.70, 1538, 35.15], ['HCB161', 1, 2, 23.75, 17.80, 3.40, 1495, 37.05],
+  ['HCB242', 1, 1, 23.75, 17.26, 3.50, 974, 24.18], ['HCB242', 1, 2, 23.75, 17.96, 3.40, 1440, 35.37],
+  ['BFRP', 1, 1, 23.75, 16.96, 3.92, 1220, 27.53], ['BFRP', 1, 2, 23.75, 17.74, 3.82, 1250, 27.67],
+  ['CFRP', 2, 1, 23.75, 18.00, 3.52, 1799, 42.59], ['CFRP', 2, 2, 23.75, 17.80, 3.25, 1460, 37.86],
+  ['HCB161', 2, 1, 23.75, 17.70, 3.50, 1413, 34.21], ['HCB161', 2, 2, 23.75, 17.92, 3.30, 1156, 29.32],
+  ['HCB242', 2, 1, 23.75, 18.16, 3.60, 1476, 33.87], ['HCB242', 2, 2, 23.75, 17.34, 3.20, 1113, 30.09],
+  ['BFRP', 2, 1, 23.75, 17.84, 4.12, 1148, 23.43], ['BFRP', 2, 2, 23.75, 17.96, 4.16, 1071, 21.50],
+];
+const ILSS = S.map(([m, s, n, L, b, h, P, tau]) => ({ mat: m, stage: s, n, L, b, h, P, tau }));
+
+// Benchmark used in the report for validation: I.D.G. Ary Subagia et al., carbon/basalt hybrids, tensile properties.
+const REFERENCE = {
+  source: 'Subagia et al., tensile tests of carbon/basalt/epoxy hybrids (report ref. 13)',
+  rows: [
+    { code: 'CFRP', strength: 687, modulus: 65, strain: 1.062 }, { code: 'B1', strength: 630, modulus: 60, strain: 1.07 },
+    { code: 'B2', strength: 602, modulus: 55, strain: 1.095 }, { code: 'B3', strength: 558, modulus: 50, strain: 1.1 },
+    { code: 'B4', strength: 536, modulus: 45, strain: 1.14 }, { code: 'B5', strength: 502, modulus: 40, strain: 1.2 },
+    { code: 'BFRP', strength: 402, modulus: 18, strain: 2.2 },
+  ],
+};
+
+// ---------- derived ----------
+function mean(arr) { return arr.reduce((a, b) => a + b, 0) / arr.length; }
+function flexAt(mat, stage) { return FLEX.filter(r => r.mat === mat && r.stage === stage); }
+function ilssAt(mat, stage) { return ILSS.filter(r => r.mat === mat && r.stage === stage); }
+function meanFlex(mat, stage, key) { return mean(flexAt(mat, stage).map(r => r[key])); }
+function meanIlss(mat, stage) { return mean(ilssAt(mat, stage).map(r => r.tau)); }
+/** Retention after 20 days as a fraction of the un-aged mean. */
+function retention(mat, key) {
+  if (key === 'tau') return meanIlss(mat, 2) / meanIlss(mat, 0);
+  return meanFlex(mat, 2, key) / meanFlex(mat, 0, key);
+}
+/** ASTM formulas from the tabulated load and dimensions (see the checks section). */
+const astm = {
+  flexStrength: r => (3 * r.P * r.span) / (2 * r.b * r.h * r.h),          // D7264, MPa
+  reportedFlexStrength: r => (3 * r.P * r.span) / (r.b * r.h * r.h),      // what reproduces the table
+  ilss: r => (0.75 * r.P) / (r.b * r.h),                                   // D2344, MPa
+  reportedIlss: r => (1.5 * r.P) / (r.b * r.h),
+};
+const STUDY = {
+  title: 'Effects of environmental aging on the mechanical properties of synthetic–natural fibre reinforced hybrid composites',
+  team: ['Romman Ahmed', 'Muhammad Shahroz', 'Qasim Mushtaq', 'Muhammad Usman Malik'],
+  supervisor: 'Asst. Prof. Dr. Zubair Sajid', coSupervisor: 'Asst. Prof. Dr. Rehan Khan',
+  institute: 'NUST College of Electrical & Mechanical Engineering, Rawalpindi', year: 2024, degree: 'DE-42 Mechanical Engineering',
+  plies: 8, fibreRatio: '40 : 60 fibre to epoxy by weight', cure: '60 °C oven cure after vacuum bagging', specimens: FLEX.length + ILSS.length,
+};
+
+return { STAGES, MATERIALS, MAT, FLEX, ILSS, REFERENCE, mean, flexAt, ilssAt, meanFlex, meanIlss, retention, astm, STUDY };
+})();
+
+const __charts = (() => {
+// Small SVG chart kit following the data-viz method: thin marks, hairline grid, legend for >= 2 series, hover layer, table view.
+const NS = 'http://www.w3.org/2000/svg';
+const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+const h = (tag, cls, parent, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; if (parent) parent.appendChild(e); return e; };
+function niceTicks(min, max, n = 5) {
+  const span = max - min || 1; const raw = span / n; const p = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1, 2, 2.5, 5, 10].map(s => s * p).find(s => span / s <= n) || p * 10;
+  const lo = Math.floor(min / step) * step, hi = Math.ceil(max / step) * step; const t = [];
+  for (let v = lo; v <= hi + 1e-9; v += step) t.push(+v.toFixed(6));
+  return { ticks: t, lo, hi };
+}
+const fmt = (v, d = 0) => v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+
+/**
+ * Line chart of a measure vs aging time. spec: { title, unit, x: [0,10,20], xLabel, series: [{ id, name, color, mean: [..], points: [[x, y, label], ...] }], decimals, yMin }
+ */
+function lineChart(container, spec) {
+  container.innerHTML = '';
+  const card = h('figure', 'chart', container);
+  const head = h('div', 'chart-head', card); h('div', 'chart-title', head, spec.title); if (spec.unit) h('div', 'chart-unit', head, spec.unit);
+  const W = 520, H = 300, m = { l: 48, r: 118, t: 14, b: 38 };
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, class: 'chart-svg', role: 'img', 'aria-label': spec.title }, card);
+  const allY = spec.series.flatMap(s => s.mean.concat(s.points.map(p => p[1])));
+  const yMinRaw = spec.yMin ?? Math.min(...allY), yMaxRaw = Math.max(...allY);
+  const pad = (yMaxRaw - yMinRaw) * 0.12 || 1;
+  const { ticks, lo, hi } = niceTicks(spec.yMin ?? yMinRaw - pad, yMaxRaw + pad, 5);
+  const xs = spec.x; const x0 = xs[0], x1 = xs[xs.length - 1];
+  const X = v => m.l + ((v - x0) / (x1 - x0)) * (W - m.l - m.r);
+  const Y = v => H - m.b - ((v - lo) / (hi - lo)) * (H - m.t - m.b);
+  const grid = el('g', { class: 'grid' }, svg);
+  ticks.forEach(t => { el('line', { x1: m.l, x2: W - m.r, y1: Y(t), y2: Y(t) }, grid); el('text', { x: m.l - 8, y: Y(t) + 4, class: 'tick', 'text-anchor': 'end' }, grid).textContent = fmt(t); });
+  xs.forEach(x => { el('text', { x: X(x), y: H - m.b + 18, class: 'tick', 'text-anchor': 'middle' }, grid).textContent = x; });
+  el('text', { x: (m.l + W - m.r) / 2, y: H - 6, class: 'axis-label', 'text-anchor': 'middle' }, grid).textContent = spec.xLabel || 'Aging time (days)';
+  el('line', { x1: m.l, x2: W - m.r, y1: Y(lo), y2: Y(lo), class: 'baseline' }, grid);
+  const marks = el('g', { class: 'marks' }, svg);
+  const dec = spec.decimals ?? 0;
+  // specimen points (small, ringed), then mean lines and markers on top
+  spec.series.forEach(s => {
+    const g = el('g', { class: 'series', 'data-id': s.id }, marks);
+    s.points.forEach(([px, py]) => { el('circle', { cx: X(px), cy: Y(py), r: 4.5, class: 'ring' }, g); el('circle', { cx: X(px), cy: Y(py), r: 3, fill: s.color, 'fill-opacity': 0.45 }, g); });
+    el('path', { d: s.mean.map((v, i) => `${i ? 'L' : 'M'}${X(xs[i])},${Y(v)}`).join(' '), fill: 'none', stroke: s.color, 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, g);
+    s.mean.forEach((v, i) => { el('circle', { cx: X(xs[i]), cy: Y(v), r: 6, class: 'ring' }, g); el('circle', { cx: X(xs[i]), cy: Y(v), r: 4, fill: s.color }, g); });
+  });
+  // end labels with collision nudge + leader lines
+  const ends = spec.series.map(s => ({ s, y: Y(s.mean[s.mean.length - 1]), v: s.mean[s.mean.length - 1] })).sort((a, b) => a.y - b.y);
+  for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 14) ends[i].y = ends[i - 1].y + 14;
+  for (let i = ends.length - 2; i >= 0; i--) if (ends[i + 1].y - ends[i].y < 14) ends[i].y = ends[i + 1].y - 14;
+  const labels = el('g', { class: 'end-labels' }, svg);
+  ends.forEach(e => {
+    const yLine = Y(e.v); const xEnd = X(x1);
+    if (Math.abs(e.y - yLine) > 2) el('line', { x1: xEnd + 6, y1: yLine, x2: xEnd + 14, y2: e.y, class: 'leader' }, labels);
+    el('text', { x: xEnd + 18, y: e.y + 4, class: 'end-label' }, labels).textContent = `${fmt(e.v, dec)} ${e.s.short || e.s.name}`;
+  });
+  // legend
+  const legend = h('div', 'legend', card);
+  spec.series.forEach(s => { const item = h('button', 'legend-item', legend); item.dataset.id = s.id; const sw = h('span', 'swatch', item); sw.style.background = s.color; h('span', '', item, s.name); item.addEventListener('mouseenter', () => focus(s.id)); item.addEventListener('mouseleave', () => focus(null)); });
+  function focus(id) { marks.querySelectorAll('.series').forEach(g => g.classList.toggle('dim', !!id && g.dataset.id !== id)); }
+  // hover layer: nearest x, tooltip listing every series
+  const hover = el('g', { class: 'hover' }, svg); const cross = el('line', { y1: m.t, y2: H - m.b, class: 'crosshair', visibility: 'hidden' }, hover);
+  const tip = h('div', 'tooltip', card); tip.hidden = true;
+  const rect = el('rect', { x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, fill: 'transparent' }, svg);
+  rect.addEventListener('mousemove', ev => {
+    const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY; const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    let best = 0; xs.forEach((x, i) => { if (Math.abs(X(x) - p.x) < Math.abs(X(xs[best]) - p.x)) best = i; });
+    cross.setAttribute('x1', X(xs[best])); cross.setAttribute('x2', X(xs[best])); cross.setAttribute('visibility', 'visible');
+    tip.innerHTML = `<div class="tip-title">${xs[best]} days</div>` + spec.series.map(s => { const pts = s.points.filter(q => q[0] === xs[best]).map(q => fmt(q[1], dec)); return `<div class="tip-row"><span class="swatch" style="background:${s.color}"></span><span>${s.name}</span><b>${fmt(s.mean[best], dec)}</b><small>${pts.join(' · ')}</small></div>`; }).join('');
+    tip.hidden = false; const cr = card.getBoundingClientRect(); tip.style.left = `${Math.min(ev.clientX - cr.left + 14, cr.width - 230)}px`; tip.style.top = `${ev.clientY - cr.top + 10}px`;
+  });
+  rect.addEventListener('mouseleave', () => { cross.setAttribute('visibility', 'hidden'); tip.hidden = true; });
+  // table view
+  const foot = h('div', 'chart-foot', card);
+  const btn = h('button', 'linkbtn', foot, 'Show table');
+  const table = h('table', 'chart-table', card); table.hidden = true;
+  const thead = h('thead', '', table); const tr = h('tr', '', thead); h('th', '', tr, 'Laminate'); xs.forEach(x => h('th', '', tr, `${x} d mean`)); xs.forEach(x => h('th', '', tr, `${x} d specimens`));
+  const tbody = h('tbody', '', table);
+  spec.series.forEach(s => { const r = h('tr', '', tbody); h('td', '', r, s.name); s.mean.forEach(v => h('td', 'num', r, fmt(v, dec))); xs.forEach(x => h('td', 'num', r, s.points.filter(q => q[0] === x).map(q => fmt(q[1], dec)).join(' / '))); });
+  btn.addEventListener('click', () => { table.hidden = !table.hidden; btn.textContent = table.hidden ? 'Show table' : 'Hide table'; });
+  return card;
+}
+
+/** Column chart, one series per item (colour follows the entity). spec: { title, unit, items: [{ name, color, value }], baseline (value drawn as reference), decimals, yMax } */
+function columnChart(container, spec) {
+  container.innerHTML = '';
+  const card = h('figure', 'chart', container);
+  const head = h('div', 'chart-head', card); h('div', 'chart-title', head, spec.title); if (spec.unit) h('div', 'chart-unit', head, spec.unit);
+  const W = 320, H = 240, m = { l: 44, r: 12, t: 16, b: 44 };
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, class: 'chart-svg', role: 'img', 'aria-label': spec.title }, card);
+  const vals = spec.items.map(i => i.value); const top = Math.max(spec.yMax ?? 0, ...vals, spec.baseline ?? 0);
+  const { ticks, lo, hi } = niceTicks(0, top * 1.08, 4);
+  const Y = v => H - m.b - ((v - lo) / (hi - lo)) * (H - m.t - m.b);
+  const grid = el('g', { class: 'grid' }, svg);
+  ticks.forEach(t => { el('line', { x1: m.l, x2: W - m.r, y1: Y(t), y2: Y(t) }, grid); el('text', { x: m.l - 8, y: Y(t) + 4, class: 'tick', 'text-anchor': 'end' }, grid).textContent = fmt(t); });
+  el('line', { x1: m.l, x2: W - m.r, y1: Y(lo), y2: Y(lo), class: 'baseline' }, grid);
+  if (spec.baseline !== undefined) { el('line', { x1: m.l, x2: W - m.r, y1: Y(spec.baseline), y2: Y(spec.baseline), class: 'reference' }, grid); el('text', { x: W - m.r, y: Y(spec.baseline) - 4, class: 'tick', 'text-anchor': 'end' }, grid).textContent = spec.baselineLabel || ''; }
+  const band = (W - m.l - m.r) / spec.items.length; const bw = Math.min(24, band * 0.5);
+  const dec = spec.decimals ?? 0;
+  spec.items.forEach((it, i) => {
+    const cx = m.l + band * (i + 0.5); const y = Y(it.value), y0 = Y(lo); const hgt = Math.max(0, y0 - y);
+    const r = Math.min(4, hgt / 2);
+    const d = `M${cx - bw / 2},${y0} V${y + r} a${r},${r} 0 0 1 ${r},-${r} H${cx + bw / 2 - r} a${r},${r} 0 0 1 ${r},${r} V${y0} Z`;
+    const g = el('g', { class: 'col' }, svg);
+    el('path', { d, fill: it.color }, g);
+    el('text', { x: cx, y: y - 6, class: 'value-label', 'text-anchor': 'middle' }, g).textContent = fmt(it.value, dec) + (spec.suffix || '');
+    el('text', { x: cx, y: H - m.b + 16, class: 'tick', 'text-anchor': 'middle' }, g).textContent = it.short || it.name;
+    const hit = el('rect', { x: cx - band / 2, y: m.t, width: band, height: H - m.t - m.b, fill: 'transparent' }, g);
+    hit.addEventListener('mouseenter', () => g.classList.add('hot')); hit.addEventListener('mouseleave', () => g.classList.remove('hot'));
+  });
+  return card;
+}
+
+/** Dots + line against a numeric x (single series, no legend). spec: { title, unit, xLabel, xTicks, points: [{x, y, label, color}] , decimals } */
+function dotLine(container, spec) {
+  container.innerHTML = '';
+  const card = h('figure', 'chart', container);
+  const head = h('div', 'chart-head', card); h('div', 'chart-title', head, spec.title); if (spec.unit) h('div', 'chart-unit', head, spec.unit);
+  const W = 320, H = 240, m = { l: 44, r: 16, t: 18, b: 44 };
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, class: 'chart-svg', role: 'img', 'aria-label': spec.title }, card);
+  const ys = spec.points.map(p => p.y); const { ticks, lo, hi } = niceTicks(0, Math.max(...ys) * 1.15, 4);
+  const xs = spec.points.map(p => p.x); const x0 = Math.min(...xs), x1 = Math.max(...xs);
+  const X = v => m.l + ((v - x0) / (x1 - x0 || 1)) * (W - m.l - m.r); const Y = v => H - m.b - ((v - lo) / (hi - lo)) * (H - m.t - m.b);
+  const grid = el('g', { class: 'grid' }, svg);
+  ticks.forEach(t => { el('line', { x1: m.l, x2: W - m.r, y1: Y(t), y2: Y(t) }, grid); el('text', { x: m.l - 8, y: Y(t) + 4, class: 'tick', 'text-anchor': 'end' }, grid).textContent = fmt(t); });
+  (spec.xTicks || xs).forEach(x => el('text', { x: X(x), y: H - m.b + 16, class: 'tick', 'text-anchor': 'middle' }, grid).textContent = spec.xFormat ? spec.xFormat(x) : x);
+  el('text', { x: (m.l + W - m.r) / 2, y: H - 8, class: 'axis-label', 'text-anchor': 'middle' }, grid).textContent = spec.xLabel || '';
+  el('line', { x1: m.l, x2: W - m.r, y1: Y(lo), y2: Y(lo), class: 'baseline' }, grid);
+  const sorted = spec.points.slice().sort((a, b) => a.x - b.x);
+  el('path', { d: sorted.map((p, i) => `${i ? 'L' : 'M'}${X(p.x)},${Y(p.y)}`).join(' '), fill: 'none', stroke: 'var(--ink-3)', 'stroke-width': 1.5, 'stroke-linejoin': 'round' }, svg);
+  const dec = spec.decimals ?? 0;
+  sorted.forEach(p => { el('circle', { cx: X(p.x), cy: Y(p.y), r: 6.5, class: 'ring' }, svg); el('circle', { cx: X(p.x), cy: Y(p.y), r: 4.5, fill: p.color }, svg); el('text', { x: X(p.x), y: Y(p.y) - 11, class: 'value-label', 'text-anchor': 'middle' }, svg).textContent = `${fmt(p.y, dec)}`; });
+  return card;
+}
+
+return { niceTicks, lineChart, columnChart, dotLine };
+})();
+
+const __moisture = (() => {
+// One-dimensional Fickian diffusion through a plate of thickness h with both faces at saturation. A model, not a measurement.
+const SERIES = 40;
+/** Fractional uptake M(t)/M∞ for diffusivity D (mm²/s), thickness h (mm), time t (s). */
+function uptake(D, h, t) {
+  let s = 0; for (let n = 0; n < SERIES; n++) { const k = 2 * n + 1; s += Math.exp(-(k * k) * Math.PI * Math.PI * D * t / (h * h)) / (k * k); }
+  return 1 - (8 / (Math.PI * Math.PI)) * s;
+}
+/** Local concentration C(z,t)/C∞ at depth z from the mid-plane (−h/2 … h/2). */
+function profile(D, h, t, z) {
+  let s = 0; for (let n = 0; n < SERIES; n++) { const k = 2 * n + 1; s += (Math.pow(-1, n) / k) * Math.cos(k * Math.PI * z / h) * Math.exp(-(k * k) * Math.PI * Math.PI * D * t / (h * h)); }
+  return Math.max(0, Math.min(1, 1 - (4 / Math.PI) * s));
+}
+const DAY = 86400;
+
+return { uptake, profile, DAY };
+})();
+
+const __lab3d = (() => {
+// Three.js stages for the Aging Lab: laminate stacks, aging rigs, and the bending / short-beam test rig. Units: mm.
+
+const PLY = { C: { edge: 0x262a2e, tow: ['#2c3035', '#41474d'], name: 'carbon' }, B: { edge: 0x8a6a2a, tow: ['#8f6d2c', '#b9924a'], name: 'basalt' } };
+const texCache = {};
+/** Procedural woven-fabric texture: 2/2 twill for carbon, plain weave for basalt. */
+function weaveTexture(kind) {
+  if (texCache[kind]) return texCache[kind];
+  const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d');
+  const tows = PLY[kind].tow; const n = 8, cell = 256 / n;
+  g.fillStyle = tows[0]; g.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    const warp = kind === 'C' ? ((i + j) % 4) < 2 : (i + j) % 2 === 0;
+    const x = i * cell, y = j * cell;
+    const grad = warp ? g.createLinearGradient(x, y, x + cell, y) : g.createLinearGradient(x, y, x, y + cell);
+    grad.addColorStop(0, tows[0]); grad.addColorStop(0.5, tows[1]); grad.addColorStop(1, tows[0]);
+    g.fillStyle = grad; g.fillRect(x + 1, y + 1, cell - 2, cell - 2);
+  }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+  texCache[kind] = t; return t;
+}
+function plyMaterials(kind, repeat = [4, 3]) {
+  const top = new THREE.MeshStandardMaterial({ map: weaveTexture(kind).clone(), roughness: 0.55, metalness: 0.05 });
+  top.map.repeat.set(repeat[0], repeat[1]); top.map.needsUpdate = true;
+  const edge = new THREE.MeshStandardMaterial({ color: PLY[kind].edge, roughness: 0.7, metalness: 0.05 });
+  return [edge, edge, top, top, edge, edge];   // +x, -x, +y, -y, +z, -z
+}
+function plyMesh(kind, L, t, W, segsX = 1) {
+  const geo = new THREE.BoxGeometry(L, t, W, segsX, 1, 1);
+  const mesh = new THREE.Mesh(geo, plyMaterials(kind, [Math.max(1, Math.round(L / 15)), Math.max(1, Math.round(W / 15))]));
+  mesh.castShadow = true; mesh.receiveShadow = true; return mesh;
+}
+
+class Stage {
+  constructor(container, opts = {}) {
+    this.container = container; this.opts = opts; this.picks = []; this.hoverCb = opts.onHover; this.animations = [];
+    const r = this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    r.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping;
+    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap; container.appendChild(r.domElement);
+    const lr = this.labels = new CSS2DRenderer(); lr.domElement.className = 'labels'; container.appendChild(lr.domElement);
+    const s = this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(opts.fov || 30, 1, 1, 20000);
+    const pm = new THREE.PMREMGenerator(r); s.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture; pm.dispose(); s.environmentIntensity = 0.7;
+    s.add(new THREE.HemisphereLight(0xffffff, 0x8a9099, 0.5));
+    const key = this.key = new THREE.DirectionalLight(0xffffff, 1.5); key.castShadow = true; key.shadow.mapSize.set(1024, 1024); key.shadow.bias = -0.0005; key.shadow.normalBias = 1; s.add(key); s.add(key.target);
+    const c = this.controls = new OrbitControls(this.camera, r.domElement);
+    c.enableDamping = true; c.dampingFactor = 0.08; c.enablePan = false; c.autoRotate = !!opts.autoRotate; c.autoRotateSpeed = opts.autoRotateSpeed ?? 0.6;
+    c.addEventListener('start', () => { c.autoRotate = false; });
+    this.ground = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShadowMaterial({ opacity: 0.14, transparent: true })); this.ground.rotation.x = -Math.PI / 2; this.ground.receiveShadow = true; s.add(this.ground);
+    this.raycaster = new THREE.Raycaster(); this.pointer = new THREE.Vector2(-9, -9); this.hovered = null;
+    r.domElement.addEventListener('pointermove', e => { const b = r.domElement.getBoundingClientRect(); this.pointer.set(((e.clientX - b.left) / b.width) * 2 - 1, -((e.clientY - b.top) / b.height) * 2 + 1); this.pointerXY = { x: e.clientX - b.left, y: e.clientY - b.top }; this.dirty = true; });
+    r.domElement.addEventListener('pointerleave', () => { this.pointer.set(-9, -9); this.dirty = true; });
+    this.ro = new ResizeObserver(() => this.resize()); this.ro.observe(container); this.resize();
+    this.visible = true; this.io = new IntersectionObserver(en => { this.visible = en[0].isIntersecting; }, { threshold: 0.05 }); this.io.observe(container);
+    this.last = performance.now(); r.setAnimationLoop(t => this.tick(t));
+  }
+  resize() { const w = this.container.clientWidth || 1, h = this.container.clientHeight || 1; this.renderer.setSize(w, h); this.labels.setSize(w, h); this.camera.aspect = w / h; this.camera.updateProjectionMatrix(); }
+  /** Register an object for hover; meta: { name, desc } */
+  pickable(obj, meta) { obj.traverse(o => { if (o.isMesh) { o.userData.meta = meta; this.picks.push(o); } }); return obj; }
+  clearPicks() { this.picks = []; this.hovered = null; }
+  label(text, pos, cls = 'lbl3d') { const d = document.createElement('div'); d.className = cls; d.textContent = text; const o = new CSS2DObject(d); o.position.copy(pos); return o; }
+  fit(center, radius, dir = [1, 0.6, 1.2], groundY) {
+    const d = new THREE.Vector3(...dir).normalize(); const dist = (radius * 1.15) / Math.sin((this.camera.fov / 2) * Math.PI / 180);
+    this.camera.position.copy(center).addScaledVector(d, dist); this.controls.target.copy(center); this.controls.update();
+    this.camera.near = Math.max(0.1, radius * 0.01); this.camera.far = radius * 60; this.camera.updateProjectionMatrix();
+    this.controls.minDistance = radius * 0.4; this.controls.maxDistance = radius * 6;
+    this.ground.position.set(center.x, groundY ?? center.y - radius * 0.55, center.z); this.ground.scale.set(radius * 10, radius * 10, 1);
+    this.key.position.copy(center).add(new THREE.Vector3(0.6, 1.2, 0.5).multiplyScalar(radius * 3)); this.key.target.position.copy(center);
+    const sc = this.key.shadow.camera; sc.left = sc.bottom = -radius * 1.6; sc.right = sc.top = radius * 1.6; sc.near = 1; sc.far = radius * 8; sc.updateProjectionMatrix();
+  }
+  onFrame(fn) { this.animations.push(fn); }
+  tick(now) {
+    const dt = Math.min(0.05, (now - this.last) / 1000); this.last = now;
+    if (!this.visible) return;
+    this.controls.update();
+    for (const fn of this.animations) fn(dt, now / 1000);
+    if (this.dirty) { this.dirty = false; this.raycaster.setFromCamera(this.pointer, this.camera); const hit = this.raycaster.intersectObjects(this.picks, false)[0]; const obj = hit ? hit.object : null; if (obj !== this.hovered) { this.hovered = obj; this.hoverCb?.(obj ? obj.userData.meta : null, this.pointerXY, obj); } }
+    this.renderer.render(this.scene, this.camera); this.labels.render(this.scene, this.camera);
+  }
+  dispose() { this.renderer.setAnimationLoop(null); this.ro.disconnect(); this.io.disconnect(); this.renderer.dispose(); }
+}
+
+// ---------- laminate stacks ----------
+function buildStacks(stage, materials) {
+  const group = new THREE.Group(); stage.scene.add(group);
+  const L = 60, W = 42, t = 0.5, gap = 90; const stacks = [];
+  materials.forEach((m, i) => {
+    const g = new THREE.Group(); g.position.x = (i - (materials.length - 1) / 2) * gap; group.add(g);
+    const plies = m.layup.map((k, j) => { const p = plyMesh(k, L, t, W); p.position.y = j * t; g.add(p); stage.pickable(p, { name: `Ply ${j + 1} of 8 · ${PLY[k].name}`, desc: `${m.name}. ${k === 'C' ? 'Woven carbon fabric, twill.' : 'Woven basalt fabric, plain weave.'}`, mat: m.id }); return p; });
+    g.add(stage.label(m.name, new THREE.Vector3(0, -8, W / 2 + 6), 'lbl3d caption'));
+    stacks.push({ g, plies, explode: 0, target: 0, mat: m });
+  });
+  stage.onFrame(dt => { for (const s of stacks) { s.explode += (s.target - s.explode) * Math.min(1, dt * 6); s.plies.forEach((p, j) => { p.position.y = j * t + j * 2.2 * s.explode; }); } });
+  stage.fit(new THREE.Vector3(0, 6, 0), 150, [0.55, 0.65, 1], -1);
+  return { group, stacks, setExplode(id, v) { for (const s of stacks) s.target = (id === 'all' || s.mat.id === id) ? v : (id === 'all' ? v : 0); } };
+}
+
+// ---------- aging rigs ----------
+function glass(color = 0xcfe3ee, opacity = 0.22) { return new THREE.MeshPhysicalMaterial({ color, transparent: true, opacity, roughness: 0.1, metalness: 0, transmission: 0, side: THREE.DoubleSide, depthWrite: false }); }
+function metal(color = 0x9aa3ad, rough = 0.4) { return new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: 0.85 }); }
+function plastic(color, rough = 0.6) { return new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: 0 }); }
+function coupon(kind, x, y, z, ry = 0) { const c = plyMesh(kind, 24, 3.6, 18); c.position.set(x, y, z); c.rotation.y = ry; return c; }
+function buildHygroChamber(stage) {
+  const g = new THREE.Group(); const S = 400, H = 400;
+  const box = new THREE.Mesh(new THREE.BoxGeometry(S, H, S), glass()); box.position.y = H / 2; g.add(stage.pickable(box, { name: 'Acrylic chamber', desc: 'Transparent acrylic box, so the specimens can be watched without opening the door and disturbing the climate.' }));
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(S + 6, 6, S + 6), plastic(0x2a2e33)); frame.position.y = 0; g.add(frame);
+  const top = frame.clone(); top.position.y = H; g.add(top);
+  const shelf = new THREE.Mesh(new THREE.BoxGeometry(S - 20, 5, S - 20), plastic(0xd8dde2, 0.5)); shelf.position.y = H * 0.5; g.add(stage.pickable(shelf, { name: 'Perforated shelf', desc: 'Specimens sit on a perforated acrylic shelf so the circulated air reaches both faces.' }));
+  for (let i = -3; i <= 3; i++) for (let j = -3; j <= 3; j++) { const hole = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 6, 20), plastic(0x6f7780)); hole.position.set(i * 48, H * 0.5, j * 48); g.add(hole); }
+  const sensor = new THREE.Mesh(new THREE.BoxGeometry(16, 10, 26), plastic(0xd03b3b)); sensor.position.set(0, H - 30, -120); g.add(stage.pickable(sensor, { name: 'DHT11 temperature & humidity sensor', desc: 'Reads air temperature and relative humidity for the controller. Its ±2 °C / ±5% RH accuracy is the setup’s stated limitation.' }));
+  const fans = [];
+  [[-S / 2 + 20, H * 0.78, 0, 0], [S / 2 - 20, H * 0.25, 0, Math.PI]].forEach(([x, y, z, ry], i) => {
+    const fan = new THREE.Group(); fan.position.set(x, y, z); fan.rotation.y = ry;
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(40, 5, 10, 40), plastic(0x2a2e33)); ring.rotation.y = Math.PI / 2; fan.add(ring);
+    const hub = new THREE.Group(); for (let b = 0; b < 5; b++) { const bl = new THREE.Mesh(new THREE.BoxGeometry(2, 34, 14), plastic(0x3a4047)); bl.position.y = 20; bl.rotation.z = 0.5; const piv = new THREE.Group(); piv.rotation.x = (b / 5) * Math.PI * 2; piv.add(bl); hub.add(piv); }
+    hub.add(new THREE.Mesh(new THREE.CylinderGeometry(8, 8, 10, 20).rotateZ(Math.PI / 2), plastic(0x2a2e33))); fan.add(hub); fans.push(hub);
+    g.add(stage.pickable(fan, { name: `Ventilation fan ${i + 1}`, desc: 'Two fans keep the air moving so there are no hot or cold corners: every specimen sees the same temperature and humidity.' }));
+  });
+  const heater = new THREE.Mesh(new THREE.CylinderGeometry(14, 14, 90, 24).rotateZ(Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0xffb070, emissive: 0xff5a10, emissiveIntensity: 1.2, roughness: 0.4 })); heater.position.set(60, H * 0.62, 90); g.add(stage.pickable(heater, { name: 'Heating element', desc: 'A heating bulb switched by a relay: on below the setpoint, off above it. Bang-bang control with a small hysteresis band.' }));
+  const hum = new THREE.Group(); hum.position.set(-110, 40, 110);
+  hum.add(new THREE.Mesh(new THREE.CylinderGeometry(30, 30, 60, 24), plastic(0x6f7780)));
+  const mist = new THREE.Mesh(new THREE.ConeGeometry(34, 120, 24, 1, true), new THREE.MeshStandardMaterial({ color: 0xeaf4ff, transparent: true, opacity: 0.35, side: THREE.DoubleSide, depthWrite: false })); mist.position.y = 90; mist.rotation.x = Math.PI; hum.add(mist);
+  g.add(stage.pickable(hum, { name: 'Ultrasonic mist maker', desc: 'The humidifying element. Switched by the relay when humidity falls below the target.' }));
+  const cups = []; ['C', 'B', 'C', 'B', 'C', 'B'].forEach((k, i) => { const c = coupon(k, -90 + i * 36, H * 0.5 + 4.5, -40 + (i % 2) * 40, 0.2); g.add(stage.pickable(c, { name: 'Specimen', desc: 'Flexure and short-beam coupons, cut to ASTM size before aging so the whole cut surface is exposed.' })); cups.push(c); });
+  const door = new THREE.Mesh(new THREE.BoxGeometry(S - 40, H - 40, 3), glass(0xcfe3ee, 0.12)); door.position.set(0, H / 2, S / 2 + 2); g.add(stage.pickable(door, { name: 'Door', desc: 'Hinged acrylic door with a rubber seal.' }));
+  const lcd = new THREE.Mesh(new THREE.BoxGeometry(80, 36, 8), plastic(0x1d5a8f)); lcd.position.set(120, H + 28, S / 2 - 30); g.add(stage.pickable(lcd, { name: 'Controller: Arduino + ESP8266, LCD, keypad', desc: 'Setpoints are typed on a keypad, shown on the LCD, and the ESP module posts readings to the cloud for remote monitoring.' }));
+  const led = new THREE.Mesh(new THREE.SphereGeometry(5, 16, 12), new THREE.MeshStandardMaterial({ color: 0x40ff60, emissive: 0x20c040, emissiveIntensity: 1 })); led.position.set(170, H + 28, S / 2 - 26); g.add(led);
+  stage.onFrame(dt => { for (const f of fans) f.rotation.x += dt * 12; mist.material.opacity = 0.25 + 0.12 * Math.sin(performance.now() / 400); });
+  g.add(stage.label('Hygro-thermal chamber', new THREE.Vector3(0, H + 70, 0), 'lbl3d caption'));
+  stage.scene.add(g); stage.fit(new THREE.Vector3(0, H / 2 + 10, 0), 330, [1, 0.55, 1.1]);
+  return { g, heater, led };
+}
+function buildHydroTub(stage) {
+  const g = new THREE.Group(); const R = 230, H = 210;
+  const tub = new THREE.Mesh(new THREE.CylinderGeometry(R, R * 0.86, H, 48, 1, true), glass(0xd6e8f0, 0.28)); tub.position.y = H / 2; g.add(stage.pickable(tub, { name: 'Plastic tub', desc: 'A polypropylene tub holding the saline bath: corrosion-proof, cheap, and large enough for all the coupons on racks.' }));
+  const bottom = new THREE.Mesh(new THREE.CircleGeometry(R * 0.86, 48).rotateX(-Math.PI / 2), plastic(0xbfd0d8)); g.add(bottom);
+  const water = new THREE.Mesh(new THREE.CylinderGeometry(R - 3, R * 0.87, H * 0.78, 48), new THREE.MeshPhysicalMaterial({ color: 0x3aa0c8, transparent: true, opacity: 0.4, roughness: 0.05, metalness: 0, depthWrite: false })); water.position.y = H * 0.39; g.add(stage.pickable(water, { name: 'Heated saline water', desc: 'Salt water at a controlled temperature, standing in for seawater exposure. Heat speeds up moisture diffusion into the epoxy.' }));
+  const lid = new THREE.Mesh(new THREE.CylinderGeometry(R + 8, R + 8, 6, 48), plastic(0xe6ebef, 0.5)); lid.position.y = H + 3; g.add(stage.pickable(lid, { name: 'Lid with ventilation holes', desc: 'Keeps the heat and vapour in; small vents stop pressure building up.' }));
+  [[-70, -60], [50, -70], [0, 0], [-60, 60], [60, 55]].forEach(([x, z]) => { const v = new THREE.Mesh(new THREE.BoxGeometry(40, 8, 40), plastic(0x2a2e33)); v.position.set(x, H + 3, z); g.add(v); });
+  const rod = new THREE.Group();
+  const tube = new THREE.Mesh(new THREE.TorusGeometry(60, 6, 12, 40, Math.PI), new THREE.MeshStandardMaterial({ color: 0xffb070, emissive: 0xff6a20, emissiveIntensity: 1.1, roughness: 0.4 })); tube.rotation.z = Math.PI; tube.position.y = 60; rod.add(tube);
+  [-60, 60].forEach(x => { const leg = new THREE.Mesh(new THREE.CylinderGeometry(6, 6, H + 10, 16), metal(0xd5d9dd, 0.3)); leg.position.set(x, 60 + (H + 10) / 2, 0); rod.add(leg); });
+  rod.position.set(90, 0, 0); g.add(stage.pickable(rod, { name: '1 kW resistance heater', desc: 'An immersion heater switched by a relay from the temperature reading, so the bath cycles a degree or so around the setpoint.' }));
+  const probe = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 140, 16), metal(0xc9ced4, 0.25)); probe.position.set(-120, H - 40, -40); g.add(stage.pickable(probe, { name: 'DS18B20 temperature probe', desc: 'A sealed digital probe in the water, read by the Arduino every few seconds. Readings are logged to an SD card with a real-time clock.' }));
+  const cable = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 120, 8), plastic(0x2a2e33)); cable.position.set(-120, H + 60, -40); g.add(cable);
+  const rack = new THREE.Group(); ['C', 'B', 'C', 'B', 'C', 'B', 'C'].forEach((k, i) => { const c = coupon(k, -105 + i * 32, 60 + (i % 2) * 20, 70, Math.PI / 2 + 0.15 * (i % 3)); c.rotation.z = Math.PI / 2; rack.add(c); });
+  const bar = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 240, 12).rotateZ(Math.PI / 2), metal()); bar.position.set(0, 120, 70); rack.add(bar);
+  g.add(stage.pickable(rack, { name: 'Specimen rack', desc: 'Coupons hang edge-on from a rod so water reaches every face and they never touch the heater.' }));
+  const ctl = new THREE.Mesh(new THREE.BoxGeometry(90, 40, 60), plastic(0x1d5a8f)); ctl.position.set(R + 80, 20, 0); g.add(stage.pickable(ctl, { name: 'Controller: Arduino, relay, LCD, SD logger', desc: 'Reads the probe, switches the heater, shows the temperature on an LCD and writes a time-stamped log to the SD card.' }));
+  stage.onFrame((dt, t) => { water.position.y = H * 0.39 + Math.sin(t * 1.3) * 0.6; });
+  g.add(stage.label('Hydro-thermal bath', new THREE.Vector3(0, H + 60, 0), 'lbl3d caption'));
+  stage.scene.add(g); stage.fit(new THREE.Vector3(30, H / 2, 0), 330, [1, 0.6, 1.1]);
+  return { g, heater: rod };
+}
+
+// ---------- test rig ----------
+/** spec: { test: 'flex'|'ilss', L, b, h, span, layup, E (MPa), P (N) }; returns handle with setLoad(fraction) */
+function buildTestRig(stage, spec) {
+  const g = new THREE.Group(); stage.scene.add(g);
+  const { L, b, h, span, layup } = spec; const flex = spec.test === 'flex';
+  const rSup = flex ? 5 : 1.5, rNose = flex ? 5 : 3; const segs = 64;
+  const plies = layup.map((k, j) => { const p = plyMesh(k, L, h / 8, b, segs); p.position.y = rSup * 2 + h / 8 * (j + 0.5); p.userData.base = p.geometry.attributes.position.array.slice(); g.add(p); return p; });
+  plies.forEach((p, j) => stage.pickable(p, { name: `Ply ${j + 1} · ${PLY[layup[j]].name}`, desc: j === 0 ? 'Bottom face: in three-point bending this ply is in tension and fails first.' : j === 7 ? 'Top face: under the loading nose, in compression.' : 'Interior ply. Interlaminar shear peaks at the mid-plane, between plies 4 and 5.' }));
+  const supMat = metal(0xb8bec4, 0.3);
+  [-span / 2, span / 2].forEach(x => { const s = new THREE.Mesh(new THREE.CylinderGeometry(rSup, rSup, b + 16, 32).rotateX(Math.PI / 2), supMat); s.position.set(x, rSup, 0); g.add(stage.pickable(s, { name: `Support roller, r = ${rSup} mm`, desc: flex ? 'ASTM D7264 supports: the specimen rests on two rollers 88 mm apart.' : 'ASTM D2344 supports: span is only four times the thickness, so shear, not bending, breaks the beam.' })); const post = new THREE.Mesh(new THREE.BoxGeometry(rSup * 2 + 4, 14, b + 16), metal(0x6f7780, 0.5)); post.position.set(x, -7, 0); g.add(post); });
+  const base = new THREE.Mesh(new THREE.BoxGeometry(L + 60, 10, b + 60), metal(0x6f7780, 0.5)); base.position.y = -19; g.add(base);
+  const noseY0 = rSup * 2 + h + rNose;
+  const nose = new THREE.Group(); nose.add(new THREE.Mesh(new THREE.CylinderGeometry(rNose, rNose, b + 16, 32).rotateX(Math.PI / 2), supMat)); const ram = new THREE.Mesh(new THREE.BoxGeometry(rNose * 2 + 4, 60, b + 16), metal(0x9aa3ad, 0.4)); ram.position.y = 30 + rNose; nose.add(ram); nose.position.y = noseY0; g.add(stage.pickable(nose, { name: `Loading nose, r = ${rNose} mm`, desc: 'Driven down at 5 mm/min by the universal testing machine; the load cell above it records the force.' }));
+  const crack = new THREE.Mesh(new THREE.BoxGeometry(flex ? 1.2 : span * 0.9, flex ? h * 0.55 : 0.8, b + 0.4), new THREE.MeshStandardMaterial({ color: 0x1a1c1f, roughness: 1 })); crack.visible = false; crack.position.set(flex ? 0 : 0, flex ? rSup * 2 + h * 0.28 : rSup * 2 + h / 2, 0); g.add(crack);
+  const I = b * h * h * h / 12; const deltaMax = (spec.P * span ** 3) / (48 * spec.E * I);
+  const scale = flex ? 3 : 4;                        // deflection exaggeration for visibility
+  // simply supported beam, centre load: normalised deflection a(3L²−4a²)/L³ inside the span; the overhang lifts with the end slope 3/L
+  const f = x => { const a = span / 2 - Math.abs(x); return a >= 0 ? a * (3 * span * span - 4 * a * a) / (span ** 3) : -3 * Math.abs(a) / span; };
+  let load = 0;
+  function apply() {
+    const d = deltaMax * scale * load;
+    for (const p of plies) { const pos = p.geometry.attributes.position; const base = p.userData.base; for (let i = 0; i < pos.count; i++) { const x = base[i * 3]; pos.array[i * 3 + 1] = base[i * 3 + 1] - d * f(x); } pos.needsUpdate = true; p.geometry.computeVertexNormals(); }
+    nose.position.y = noseY0 - d * f(0);
+    crack.visible = load >= 0.999; if (crack.visible) crack.position.y = (flex ? rSup * 2 + h * 0.28 : rSup * 2 + h / 2) - d;
+  }
+  apply();
+  stage.fit(new THREE.Vector3(0, rSup + h / 2, 0), flex ? span * 0.62 : span * 1.9, [0.9, 0.45, 1.2]);
+  return { g, plies, setLoad(v) { load = Math.max(0, Math.min(1.02, v)); apply(); }, deltaMax, I, dispose() { stage.scene.remove(g); stage.clearPicks(); g.traverse(o => { if (o.isMesh) { o.geometry.dispose(); } }); } };
+}
+
+return { weaveTexture, plyMaterials, plyMesh, Stage, buildStacks, buildHygroChamber, buildHydroTub, buildTestRig };
+})();
+
+const __main = (() => {
+const { MATERIALS, MAT, STAGES, FLEX, ILSS, REFERENCE, STUDY, meanFlex, meanIlss, retention, flexAt, ilssAt, astm, mean } = __data;
+const { lineChart, columnChart, dotLine, niceTicks } = __charts;
+const { Stage, buildStacks, buildHygroChamber, buildHydroTub, buildTestRig } = __lab3d;
+const { uptake, profile, DAY } = __moisture;
+
+const $ = id => document.getElementById(id);
+const fmt = (v, d = 0) => v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+const dark = () => { const t = document.documentElement.getAttribute('data-theme'); return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; };
+const color = m => (dark() ? m.colorDark : m.color);
+const layupNotation = m => { const runs = []; for (const k of m.layup) { const last = runs[runs.length - 1]; if (last && last.k === k) last.n++; else runs.push({ k, n: 1 }); } return '[' + runs.map(r => r.k + (r.n > 1 ? '₀₁₂₃₄₅₆₇₈₉'[r.n] : '')).join('/') + ']'; };
+
+// ---------- theme ----------
+try { const t = localStorage.getItem('lab-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch {}
+$('themeBtn').addEventListener('click', () => { const next = dark() ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', next); try { localStorage.setItem('lab-theme', next); } catch {} renderCharts(); });
+
+// ---------- 3D tooltip ----------
+const tip = $('tip3d');
+function hoverTip(meta, xy, stageEl) {
+  if (!meta) { tip.classList.add('hidden'); return; }
+  const r = stageEl.getBoundingClientRect();
+  tip.innerHTML = `<b>${meta.name}</b>${meta.desc || ''}`; tip.classList.remove('hidden');
+  const x = Math.min(r.left + xy.x + 14, innerWidth - 300), y = Math.min(r.top + xy.y + 14, innerHeight - 90);
+  tip.style.left = `${x}px`; tip.style.top = `${y}px`;
+}
+
+// ---------- hero: tiles + stacks ----------
+$('tiles').innerHTML = [[MATERIALS.length, 'laminates'], [STUDY.plies, 'plies each'], [STAGES.length, 'aging stages · 0, 10, 20 d'], [STUDY.specimens, 'specimens broken']].map(([v, l]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+const stackStage = new Stage($('stackStage'), { autoRotate: true, autoRotateSpeed: 0.5, onHover: (m, xy) => hoverTip(m, xy, $('stackStage')) });
+const stacks = buildStacks(stackStage, MATERIALS);
+
+// ---------- laminate cards ----------
+const cards = $('laminateCards'); let exploded = null;
+MATERIALS.forEach(m => {
+  const c = document.createElement('button'); c.className = 'card'; c.dataset.id = m.id;
+  c.innerHTML = `<div class="card-head"><span class="swatch" style="background:${m.color}"></span><b>${m.name}</b><span class="code">${m.code}</span></div>
+    <div class="stack">${m.layup.slice().reverse().map(k => `<i class="${k}"></i>`).join('')}</div>
+    <div class="kv"><span>Layup</span><span class="mono">${layupNotation(m)}</span><span>Basalt share</span><span class="mono">${Math.round(m.basalt * 100)}%</span><span>Flexural modulus</span><span class="mono">${fmt(meanFlex(m.id, 0, 'E'), 1)} GPa</span><span>Flexural strength</span><span class="mono">${fmt(meanFlex(m.id, 0, 'sigma'))} MPa</span><span>ILSS</span><span class="mono">${fmt(meanIlss(m.id, 0), 1)} MPa</span></div>
+    <p>${m.blurb}</p>`;
+  c.addEventListener('click', () => { exploded = exploded === m.id ? null : m.id; cards.querySelectorAll('.card').forEach(x => x.classList.toggle('on', x.dataset.id === exploded)); stacks.stacks.forEach(s => { s.target = s.mat.id === exploded ? 1 : 0; }); stackStage.controls.autoRotate = false; });
+  cards.appendChild(c);
+});
+
+// ---------- rigs ----------
+const rigStage = new Stage($('rigStage'), { autoRotate: true, autoRotateSpeed: 0.4, onHover: (m, xy, obj) => { hoverTip(m, xy, $('rigStage')); $('rigParts').querySelectorAll('li').forEach(li => li.classList.toggle('hot', !!m && li.dataset.name === m.name)); } });
+const RIGS = {
+  hydro: { title: 'Hydro-thermal bath', desc: 'A tub of heated salt water for marine exposure. An Arduino reads a DS18B20 probe, switches a 1 kW immersion heater through a relay, shows the temperature on an LCD and logs it to an SD card with a real-time clock.', build: buildHydroTub, setpoint: 60 },
+  hygro: { title: 'Hygro-thermal chamber', desc: 'An acrylic box with a heating bulb, an ultrasonic mist maker and two fans, controlled from a DHT11 sensor by an Arduino with an ESP8266 Wi-Fi module that posts readings to a phone app. Temperature and humidity are set on a keypad.', build: buildHygroChamber, setpoint: 55 },
+};
+let rig = null, rigId = null;
+function showRig(id) {
+  if (rig) { rigStage.scene.remove(rig.g); rig.g.traverse(o => { if (o.isCSS2DObject) o.element.remove(); if (o.isMesh) o.geometry.dispose(); }); rigStage.clearPicks(); rigStage.animations = []; }
+  rigId = id; rig = RIGS[id].build(rigStage); rigStage.controls.autoRotate = true;
+  $('rigTitle').textContent = RIGS[id].title; $('rigDesc').textContent = RIGS[id].desc;
+  const seen = new Map(); rigStage.picks.forEach(o => { const m = o.userData.meta; if (!seen.has(m.name)) seen.set(m.name, m); });
+  $('rigParts').innerHTML = [...seen.values()].map(m => `<li data-name="${m.name}"><b>${m.name}</b> · ${m.desc}</li>`).join('');
+  ctl.T = 25; ctl.on = false; ctl.hist = []; ctl.set = RIGS[id].setpoint;
+}
+$('rigTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $('rigTabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); showRig(b.dataset.rig); });
+// controller simulation: first-order thermal plant with relay hysteresis
+const ctl = { T: 25, on: false, hist: [], set: 60, t: 0 };
+setInterval(() => {
+  const dt = 4; // simulated seconds per tick (real 0.1 s)
+  if (ctl.T < ctl.set - 1) ctl.on = true; else if (ctl.T > ctl.set + 1) ctl.on = false;
+  ctl.T += ((ctl.on ? 0.07 : 0) - 0.0016 * (ctl.T - 25)) * dt; ctl.t += dt;
+  ctl.hist.push({ t: ctl.t, T: ctl.T, on: ctl.on }); if (ctl.hist.length > 240) ctl.hist.shift();
+  $('ctlReadout').textContent = `${ctl.T.toFixed(1)} °C · set ${ctl.set} °C`; $('ctlLed').classList.toggle('on', ctl.on);
+  if (rig && rig.heater) rig.heater.traverse(o => { if (o.material && o.material.emissive) o.material.emissiveIntensity = ctl.on ? 1.2 : 0.15; });
+  drawCtl();
+}, 100);
+function drawCtl() {
+  const svg = $('ctlChart'); const W = 320, H = 110, m = { l: 34, r: 8, t: 8, b: 18 }; const hist = ctl.hist; if (hist.length < 2) return;
+  const t0 = hist[0].t, t1 = hist[hist.length - 1].t; const X = t => m.l + ((t - t0) / Math.max(1, t1 - t0)) * (W - m.l - m.r); const Y = v => H - m.b - ((v - 20) / 50) * (H - m.t - m.b);
+  svg.innerHTML = `<g class="grid">${[25, 40, 55, 70].map(v => `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--grid)"/><text x="${m.l - 6}" y="${Y(v) + 3}" text-anchor="end" class="tick" style="font-size:9px;fill:var(--ink-3);font-family:var(--mono)">${v}</text>`).join('')}</g>
+    <rect x="${m.l}" y="${Y(ctl.set + 1)}" width="${W - m.l - m.r}" height="${Y(ctl.set - 1) - Y(ctl.set + 1)}" fill="var(--accent-soft)"/>
+    <path d="${hist.map((p, i) => `${i ? 'L' : 'M'}${X(p.t).toFixed(1)},${Y(p.T).toFixed(1)}`).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>
+    ${hist.map((p, i) => p.on ? `<rect x="${X(p.t).toFixed(1)}" y="${H - m.b + 6}" width="${((W - m.l - m.r) / 240 + 0.5).toFixed(1)}" height="5" fill="#f08a24"/>` : '').join('')}
+    <text x="${m.l}" y="${H - 1}" style="font-size:9px;fill:var(--ink-3)">heater on</text>`;
+}
+showRig('hydro');
+
+// ---------- moisture ----------
+const ms = { D: $('dSlider'), h: $('hSlider'), M: $('mSlider'), t: $('tSlider') };
+function drawMoisture() {
+  const D = Math.pow(10, +ms.D.value), h = +ms.h.value, Minf = +ms.M.value, tDay = +ms.t.value;
+  $('dVal').textContent = `${D.toExponential(1)} mm²/s`; $('hVal').textContent = `${h.toFixed(1)} mm`; $('mVal').textContent = `${Minf.toFixed(1)} % by mass`; $('tVal').textContent = `day ${tDay}`;
+  // uptake curve
+  const c1 = $('uptakeChart'); c1.innerHTML = '';
+  const fig = document.createElement('figure'); fig.className = 'chart'; fig.innerHTML = `<div class="chart-head"><div class="chart-title">Moisture uptake (model)</div><div class="chart-unit">% of dry mass</div></div>`; c1.appendChild(fig);
+  const W = 320, H = 220, m = { l: 40, r: 16, t: 12, b: 36 }; const X = d => m.l + (d / 120) * (W - m.l - m.r); const Y = v => H - m.b - (v / (Minf * 1.1)) * (H - m.t - m.b);
+  const pts = []; for (let d = 0; d <= 120; d += 2) pts.push([d, Minf * uptake(D, h, d * DAY)]);
+  const tk = niceTicks(0, Minf * 1.1, 4).ticks.filter(v => v <= Minf * 1.1);
+  const mark = d => { const v = Minf * uptake(D, h, d * DAY); return `<circle cx="${X(d)}" cy="${Y(v)}" r="6" class="ring"/><circle cx="${X(d)}" cy="${Y(v)}" r="4" fill="var(--accent)"/><text x="${X(d) + 10}" y="${Y(v) + 14}" text-anchor="start" class="value-label">${v.toFixed(2)}% at ${d} d</text>`; };
+  fig.insertAdjacentHTML('beforeend', `<svg viewBox="0 0 ${W} ${H}" class="chart-svg" role="img" aria-label="Moisture uptake versus time"><g class="grid">${tk.map(v => `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${m.l - 8}" y="${Y(v) + 4}" class="tick" text-anchor="end">${v}</text>`).join('')}${[0, 30, 60, 90, 120].map(d => `<text x="${X(d)}" y="${H - m.b + 16}" class="tick" text-anchor="middle">${d}</text>`).join('')}<text x="${(m.l + W - m.r) / 2}" y="${H - 6}" class="axis-label" text-anchor="middle">Days immersed</text><line x1="${m.l}" x2="${W - m.r}" y1="${Y(0)}" y2="${Y(0)}" class="baseline"/></g>
+    <path d="${pts.map((p, i) => `${i ? 'L' : 'M'}${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="2"/>${mark(10)}${mark(20)}</svg>`);
+  // profile through the thickness
+  const c2 = $('profileChart'); c2.innerHTML = '';
+  const fig2 = document.createElement('figure'); fig2.className = 'chart'; fig2.innerHTML = `<div class="chart-head"><div class="chart-title">Water through the thickness at day ${tDay} (model)</div><div class="chart-unit">% of dry mass, local</div></div>`; c2.appendChild(fig2);
+  const N = 40; const prof = []; for (let i = 0; i <= N; i++) { const z = -h / 2 + (i / N) * h; prof.push([z, Minf * profile(D, h, tDay * DAY, z)]); }
+  const Xz = z => m.l + ((z + h / 2) / h) * (W - m.l - m.r);
+  const area = `M${Xz(-h / 2)},${Y(0)} ` + prof.map(p => `L${Xz(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ') + ` L${Xz(h / 2)},${Y(0)} Z`;
+  fig2.insertAdjacentHTML('beforeend', `<svg viewBox="0 0 ${W} ${H}" class="chart-svg" role="img" aria-label="Moisture profile through the thickness"><g class="grid">${tk.map(v => `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${m.l - 8}" y="${Y(v) + 4}" class="tick" text-anchor="end">${v}</text>`).join('')}<text x="${Xz(-h / 2)}" y="${H - m.b + 16}" class="tick" text-anchor="start">face</text><text x="${Xz(0)}" y="${H - m.b + 16}" class="tick" text-anchor="middle">mid-plane</text><text x="${Xz(h / 2)}" y="${H - m.b + 16}" class="tick" text-anchor="end">face</text><text x="${(m.l + W - m.r) / 2}" y="${H - 6}" class="axis-label" text-anchor="middle">Position through the ${h.toFixed(1)} mm laminate</text><line x1="${m.l}" x2="${W - m.r}" y1="${Y(0)}" y2="${Y(0)}" class="baseline"/></g>
+    <path d="${area}" fill="var(--accent)" fill-opacity="0.12"/><path d="${prof.map((p, i) => `${i ? 'L' : 'M'}${Xz(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="2"/>
+    <text x="${Xz(0)}" y="${Y(prof[N / 2][1]) - 8}" text-anchor="middle" class="value-label">core ${prof[N / 2][1].toFixed(2)}%</text></svg>`);
+}
+Object.values(ms).forEach(s => s.addEventListener('input', drawMoisture)); drawMoisture();
+
+// ---------- tests ----------
+const ts = { test: 'flex', mat: 'CFRP', stage: 0, n: 1, load: 0 };
+$('matTabs').innerHTML = MATERIALS.map(m => `<button data-mat="${m.id}" class="${m.id === ts.mat ? 'on' : ''}">${m.name}</button>`).join('');
+$('stageTabs').innerHTML = STAGES.map(s => `<button data-stage="${s.id}" class="${s.id === ts.stage ? 'on' : ''}">${s.short}</button>`).join('');
+const testStage = new Stage($('testStage'), { onHover: (m, xy) => hoverTip(m, xy, $('testStage')) });
+let rigT = null, row = null;
+function specimenRow() { return ts.test === 'flex' ? flexAt(ts.mat, ts.stage).find(r => r.n === ts.n) : ilssAt(ts.mat, ts.stage).find(r => r.n === ts.n); }
+function buildTest() {
+  if (rigT) rigT.dispose();
+  row = specimenRow(); const E = meanFlex(ts.mat, ts.stage, 'E') * 1000; const span = ts.test === 'flex' ? row.span : 4 * row.h;
+  rigT = buildTestRig(testStage, { test: ts.test, L: row.L, b: row.b, h: row.h, span, layup: MAT[ts.mat].layup, E, P: row.P });
+  ts.load = 0; $('loadSlider').value = 0; rigT.setLoad(0); updateTestReadout(E, span);
+}
+function updateTestReadout(E, span) {
+  const p = ts.load; const P = p * row.P; const m = MAT[ts.mat]; const flex = ts.test === 'flex';
+  $('loadReadout').textContent = `${fmt(P)} N`;
+  $('specTitle').textContent = `${m.name} · ${STAGES[ts.stage].label} · specimen ${ts.n}`;
+  const I = row.b * row.h ** 3 / 12; const delta = rigT.deltaMax * p;
+  const rows = flex
+    ? [['size', `${row.L.toFixed(2)} × ${row.b.toFixed(2)} × ${row.h.toFixed(2)} mm`], ['span', `${span} mm`], ['failure load', `${fmt(row.P)} N`], ['strength', `${fmt(row.sigma, 1)} MPa reported`], ['modulus', `${fmt(row.E, 2)} GPa`], ['I', `${fmt(I, 2)} mm⁴`], ['deflection', `${delta.toFixed(2)} mm at this load (calc.)`]]
+    : [['size', `${row.L.toFixed(2)} × ${row.b.toFixed(2)} × ${row.h.toFixed(2)} mm`], ['span', `${span.toFixed(1)} mm (4 h)`], ['failure load', `${fmt(row.P)} N`], ['ILSS', `${fmt(row.tau, 2)} MPa reported`], ['modulus used', `${fmt(E / 1000, 1)} GPa (flexure mean)`]];
+  $('specBlock').innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
+  const sigmaNow = flex ? row.sigma * p : 0; const tauNow = flex ? (0.75 * P / (row.b * row.h)) * 2 : row.tau * p;
+  $('formula').innerHTML = flex
+    ? `σ = 3PL / (b h²) as reported → ${fmt(row.sigma, 1)} MPa at failure<br>ASTM D7264 σ = 3PL / (2 b h²) → ${fmt(astm.flexStrength(row), 1)} MPa (see Checks)<br>δ = P L³ / (48 E I), shown ×3`
+    : `τ = 1.5 P / (b h) as reported → ${fmt(row.tau, 2)} MPa at failure<br>ASTM D2344 τ = 0.75 P / (b h) → ${fmt(astm.ilss(row), 2)} MPa (see Checks)`;
+  drawStress(flex, sigmaNow, tauNow, p);
+}
+function drawStress(flex, sigma, tau, p) {
+  const svg = $('stressChart'); const W = 320, H = 150; const x0 = 40, x1 = 150, x2 = 190, x3 = 300; const yT = 24, yB = 128, yM = (yT + yB) / 2;
+  const s = Math.max(0.02, p); const xc = x0 + 55;
+  const bend = flex ? `<path d="M${xc},${yT} L${xc - 50 * s},${yT} L${xc},${yM} L${xc + 50 * s},${yB} L${xc},${yB} Z" fill="#2a78d6" fill-opacity="0.18" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/><text x="${xc - 50 * s - 4}" y="${yT + 4}" text-anchor="end" style="font-size:9px;fill:var(--ink-3)">−</text><text x="${xc + 50 * s + 4}" y="${yB + 3}" style="font-size:9px;fill:var(--ink-3)">+</text>` : `<line x1="${xc}" y1="${yT}" x2="${xc}" y2="${yB}" stroke="var(--grid)"/>`;
+  const shear = `<path d="M${x2 + 55},${yT} ${Array.from({ length: 21 }, (_, i) => { const u = i / 20; const y = yT + u * (yB - yT); const v = 4 * u * (1 - u); return `L${x2 + 55 + 50 * s * v},${y}`; }).join(' ')} Z" fill="#eb6834" fill-opacity="0.18" stroke="#eb6834" stroke-width="2" stroke-linejoin="round"/>`;
+  svg.innerHTML = `<line x1="${x0 + 55}" y1="${yT}" x2="${x0 + 55}" y2="${yB}" stroke="var(--baseline)"/><line x1="${x2 + 55}" y1="${yT}" x2="${x2 + 55}" y2="${yB}" stroke="var(--baseline)"/>
+    ${bend}${shear}
+    <text x="${x0 + 55}" y="14" text-anchor="middle" style="font-size:11px;fill:var(--ink-2)">bending stress σ</text><text x="${x2 + 55}" y="14" text-anchor="middle" style="font-size:11px;fill:var(--ink-2)">interlaminar shear τ</text>
+    <text x="${x0 + 55}" y="${yB + 14}" text-anchor="middle" style="font-size:10px;fill:var(--ink-3)">${flex ? `±${fmt(sigma)} MPa at the faces` : 'negligible at 4 h span'}</text>
+    <text x="${x2 + 55}" y="${yB + 14}" text-anchor="middle" style="font-size:10px;fill:var(--ink-3)">${fmt(tau, 1)} MPa at the mid-plane</text>
+    <text x="4" y="${yT + 4}" style="font-size:9px;fill:var(--ink-3)">top</text><text x="4" y="${yB + 3}" style="font-size:9px;fill:var(--ink-3)">bottom</text>`;
+}
+$('testTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $('testTabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); ts.test = b.dataset.test; buildTest(); });
+$('matTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $('matTabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); ts.mat = b.dataset.mat; buildTest(); });
+$('stageTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $('stageTabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); ts.stage = +b.dataset.stage; buildTest(); });
+$('specTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $('specTabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); ts.n = +b.dataset.n; buildTest(); });
+$('loadSlider').addEventListener('input', () => { ts.load = +$('loadSlider').value; rigT.setLoad(ts.load); updateTestReadout(meanFlex(ts.mat, ts.stage, 'E') * 1000, ts.test === 'flex' ? row.span : 4 * row.h); });
+let runAnim = null;
+$('runTest').addEventListener('click', () => { cancelAnimationFrame(runAnim); const t0 = performance.now(); const step = () => { const u = Math.min(1.02, (performance.now() - t0) / 2500 * 1.02); $('loadSlider').value = u; $('loadSlider').dispatchEvent(new Event('input')); if (u < 1.02) runAnim = requestAnimationFrame(step); }; step(); });
+buildTest();
+
+// ---------- results ----------
+function seriesFor(key) {
+  return MATERIALS.map(m => ({ id: m.id, name: m.name, short: m.id, color: color(m), mean: STAGES.map(s => key === 'tau' ? meanIlss(m.id, s.id) : meanFlex(m.id, s.id, key)), points: (key === 'tau' ? ILSS : FLEX).filter(r => r.mat === m.id).map(r => [STAGES[r.stage].days, key === 'tau' ? r.tau : r[key]]) }));
+}
+function renderCharts() {
+  lineChart($('strengthChart'), { title: 'Flexural strength', unit: 'MPa, as reported', x: [0, 10, 20], series: seriesFor('sigma'), yMin: 0 });
+  lineChart($('modulusChart'), { title: 'Flexural modulus', unit: 'GPa', x: [0, 10, 20], series: seriesFor('E'), yMin: 0, decimals: 1 });
+  lineChart($('ilssChart'), { title: 'Interlaminar shear strength', unit: 'MPa, as reported', x: [0, 10, 20], series: seriesFor('tau'), yMin: 0, decimals: 1 });
+  const ret = key => MATERIALS.map(m => ({ name: m.name, short: m.id, color: color(m), value: retention(m.id, key) * 100 }));
+  columnChart($('retStrength'), { title: 'Flexural strength retained', unit: '% of un-aged', items: ret('sigma'), baseline: 100, baselineLabel: 'no change', suffix: '%', yMax: 130 });
+  columnChart($('retModulus'), { title: 'Flexural modulus retained', unit: '% of un-aged', items: ret('E'), baseline: 100, baselineLabel: 'no change', suffix: '%', yMax: 130 });
+  columnChart($('retIlss'), { title: 'ILSS retained', unit: '% of un-aged', items: ret('tau'), baseline: 100, baselineLabel: 'no change', suffix: '%', yMax: 130 });
+  const pct = x => `${Math.round(x * 100)}%`;
+  dotLine($('hybridModulus'), { title: 'Un-aged flexural modulus vs basalt share', unit: 'GPa', xLabel: 'Basalt plies as a share of eight', xFormat: pct, decimals: 1, points: MATERIALS.map(m => ({ x: m.basalt, y: meanFlex(m.id, 0, 'E'), color: color(m) })) });
+  dotLine($('hybridStrength'), { title: 'Un-aged flexural strength vs basalt share', unit: 'MPa, as reported', xLabel: 'Basalt plies as a share of eight', xFormat: pct, points: MATERIALS.map(m => ({ x: m.basalt, y: meanFlex(m.id, 0, 'sigma'), color: color(m) })) });
+  dotLine($('referenceChart'), { title: 'Reference: tensile modulus, Subagia et al.', unit: 'GPa, carbon → basalt', xLabel: 'CFRP, hybrids B1–B5, BFRP (report ref. 13)', xTicks: [0, 3, 6], xFormat: i => ['CFRP', '', '', 'B3', '', '', 'BFRP'][i], points: REFERENCE.rows.map((r, i) => ({ x: i, y: r.modulus, color: dark() ? '#aab3ba' : '#6f7a83' })) });
+}
+renderCharts();
+// findings, with the numbers computed from the data
+const ch = (m, key, a, b) => { const v0 = key === 'tau' ? meanIlss(m, a) : meanFlex(m, a, key), v1 = key === 'tau' ? meanIlss(m, b) : meanFlex(m, b, key); return (v1 / v0 - 1) * 100; };
+const sg = v => `${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(0)}%`;
+$('findings').innerHTML = [
+  ['CFRP', 'Carbon got stiffer, not weaker', `Flexural modulus rose ${sg(ch('CFRP', 'E', 0, 2))} over twenty days (${fmt(meanFlex('CFRP', 0, 'E'), 1)} → ${fmt(meanFlex('CFRP', 2, 'E'), 1)} GPa) and strength peaked at ten days (${sg(ch('CFRP', 'sigma', 0, 1))}) before returning to its starting level. A warm bath keeps curing an epoxy that left the oven at 60 °C; the literature the team cites shows the same rise-then-fall for carbon/epoxy. Only the interface-sensitive ILSS fell (${sg(ch('CFRP', 'tau', 0, 2))}).`],
+  ['BFRP', 'Basalt lost on every measure', `Strength ${sg(ch('BFRP', 'sigma', 0, 2))}, modulus ${sg(ch('BFRP', 'E', 0, 2))}, ILSS ${sg(ch('BFRP', 'tau', 0, 2))} after twenty days, and the fall was steady rather than a step. The basalt–epoxy interface is the moisture-sensitive one; water reaching it undoes the bond before it can plasticise the bulk resin.`],
+  ['HCB161', 'One basalt skin costs little', `With a single basalt ply on each face, strength was unchanged within scatter (${sg(ch('HCB161', 'sigma', 0, 2))}), modulus rose ${sg(ch('HCB161', 'E', 0, 2))} like carbon's, and ILSS fell ${sg(ch('HCB161', 'tau', 0, 2))}. It keeps ${Math.round(meanFlex('HCB161', 0, 'E') / meanFlex('CFRP', 0, 'E') * 100)}% of carbon's stiffness while breaking the galvanic couple with metal fasteners.`],
+  ['HCB242', 'Two skins behave like basalt', `Half basalt by ply count gave the largest strength loss (${sg(ch('HCB242', 'sigma', 0, 2))}) and a modulus fall of ${sg(ch('HCB242', 'E', 0, 2))}; ILSS was flat (${sg(ch('HCB242', 'tau', 0, 2))}) but with the widest specimen-to-specimen scatter in the study (24 and 35 MPa at ten days). The outer plies carry the bending stress, so degrading basalt on the outside costs more than its share.`],
+].map(([id, title, text]) => `<div class="finding"><div class="fh"><span class="swatch" style="background:${color(MAT[id])}"></span>${title}</div><p>${text}</p></div>`).join('');
+// checks
+const sample = FLEX[0], sample2 = ILSS[0];
+$('checksList').innerHTML = [
+  ['Formulas', 'Reported strengths are twice the ASTM formula values', `Recomputing from the tabulated loads and dimensions reproduces the reported numbers only with σ = 3PL/(b·h²) and τ = 1.5P/(b·h). ASTM D7264 and D2344 use σ = 3PL/(2·b·h²) and τ = 0.75P/(b·h), which give exactly half. Either the loads and span in the table are not the ones used in the calculation, or a factor of two crept into the spreadsheet. Ratios and trends are unaffected; absolute values should be checked against the raw UTM files before being quoted.<table><tr><th>Specimen</th><th>P (N)</th><th>b × h (mm)</th><th class="num">Reported</th><th class="num">ASTM</th></tr><tr><td>CFRP flexure, un-aged, no. 1</td><td class="num">${sample.P}</td><td class="num">${sample.b} × ${sample.h}</td><td class="num">${fmt(sample.sigma, 1)} MPa</td><td class="num">${fmt(astm.flexStrength(sample), 1)} MPa</td></tr><tr><td>CFRP short-beam, un-aged, no. 1</td><td class="num">${sample2.P}</td><td class="num">${sample2.b} × ${sample2.h}</td><td class="num">${fmt(sample2.tau, 2)} MPa</td><td class="num">${fmt(astm.ilss(sample2), 2)} MPa</td></tr></table>`],
+  ['Sample size', 'Two specimens per point', `Every mean on this page is the average of two coupons. Differences smaller than the spread between the two dots should not be read as effects; HCB242 ILSS at ten days (24 and 35 MPa) is the clearest example.`],
+  ['Figures', 'The report’s plots round, and one point disagrees with its table', `The line charts in the report use rounded values. Most match the table means to within a few MPa, but HCB161 flexural strength at ten days is plotted at 590 MPa while the two specimens in the table average ${fmt(meanFlex('HCB161', 1, 'sigma'))} MPa, and BFRP modulus at zero days is plotted at 18 GPa against a table mean of ${fmt(meanFlex('BFRP', 0, 'E'), 1)} GPa. This page uses the tables. The ILSS plots also label their x-axis 0, 1, 2 days where the aging stages were 0, 10 and 20 days.`],
+  ['Conditions', 'Bath temperature and salinity are not stated', `The text describes both rigs but the results section does not record the water temperature, salt concentration, or which rig produced the 10- and 20-day data. Those numbers belong in the results table before the study is compared with published aging work.`],
+  ['Fabric', '“Uni-directional” in the table, woven in the photographs', `The materials table lists the fibre structure as uni-directional, but the lay-up photographs show twill and plain-weave fabrics, and the measured moduli (43 GPa for carbon at a 40 : 60 fibre : resin ratio) are typical of woven, not uni-directional, laminates. The 3D models on this page use woven plies.`],
+  ['Specimens', 'Two lengths of flexure coupon', `HCB242 flexure coupons were cut 146 mm long against 111 mm for the others. With the same 88 mm span the overhang is larger but the stress state between the supports is unchanged, so the comparison holds.`],
+].map(([tag, title, body]) => `<div class="check"><div class="tag">${tag}</div><div><h4>${title}</h4><p>${body}</p></div></div>`).join('');
+// footer
+$('footTitle').textContent = STUDY.title; $('footTeam').textContent = STUDY.team.join(', '); $('footSup').textContent = `${STUDY.supervisor} (with ${STUDY.coSupervisor})`; $('footInst').textContent = `${STUDY.institute}, ${STUDY.year}`;
+window.lab = { stackStage, rigStage, testStage, ts };
+
+return {  };
+})();
+
+</script>

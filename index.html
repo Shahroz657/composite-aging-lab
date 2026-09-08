@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Interactive companion to a final-year study of environmental aging in carbon, basalt and carbon–basalt hybrid laminates: the laminates in 3D, the aging rigs, the bending tests, and every measured result.">
+<title>Basalt–Carbon Aging Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
+</head>
+<body>
+<header class="topnav">
+  <a class="brand" href="#top"><span class="dot"></span>Basalt–Carbon Aging Lab</a>
+  <nav>
+    <a href="#laminates">Laminates</a><a href="#rigs">Aging rigs</a><a href="#moisture">Moisture</a><a href="#tests">Tests</a><a href="#results">Results</a><a href="#checks">Checks</a>
+  </nav>
+  <div class="nav-right"><a class="ghost" href="https://machine-atlas-ecru.vercel.app/" target="_blank" rel="noopener">Machine Atlas ↗</a><button class="iconbtn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button></div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero-text">
+      <div class="eyebrow">Final-year project · NUST College of E&amp;ME · 2024</div>
+      <h1>What twenty days in hot salt water do to carbon, basalt, and their hybrids</h1>
+      <p class="lede">Four eight-ply laminates were laid up by hand, aged in two purpose-built IoT chambers, and broken in three-point bending and short-beam shear. This page rebuilds the study so you can turn the laminates over, watch the tests, and read every specimen.</p>
+      <div class="tiles" id="tiles"></div>
+    </div>
+    <div class="hero-3d">
+      <div class="stage" id="stackStage"></div>
+      <div class="stage-hint">Drag to orbit · hover a ply</div>
+    </div>
+  </section>
+
+  <section id="laminates" class="section">
+    <div class="section-head"><h2>Four laminates, one question</h2><p>Carbon is stiff and strong but corrodes the aluminium it touches. Basalt is inert and cheap but half as stiff. The hybrids put basalt on the faces, where the metal is, and carbon in the core, where the stiffness comes from. Click a laminate to explode its stack above.</p></div>
+    <div class="cards" id="laminateCards"></div>
+  </section>
+
+  <section id="rigs" class="section">
+    <div class="section-head"><h2>Two home-built aging rigs</h2><p>Both chambers were designed in SolidWorks and run by Arduino-class controllers with relays, sensors and cloud logging. Hover the components.</p></div>
+    <div class="split">
+      <div>
+        <div class="segmented" id="rigTabs"><button class="on" data-rig="hydro">Hydro-thermal bath</button><button data-rig="hygro">Hygro-thermal chamber</button></div>
+        <div class="stage tall" id="rigStage"></div>
+        <div class="stage-hint">Drag to orbit · hover a component</div>
+      </div>
+      <aside class="side">
+        <h3 id="rigTitle">Hydro-thermal bath</h3>
+        <p id="rigDesc"></p>
+        <ul class="parts" id="rigParts"></ul>
+        <div class="ctl-card">
+          <div class="ctl-head"><span class="lbl">Controller loop</span><span class="mono" id="ctlReadout"></span><span class="led" id="ctlLed"></span></div>
+          <svg id="ctlChart" viewBox="0 0 320 110" class="ctl-svg" role="img" aria-label="Simulated bath temperature under relay control"></svg>
+          <div class="note">Simulated bang-bang control with a 1 °C hysteresis band, drawn to show how the rig holds its setpoint. Not logged data.</div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="moisture" class="section">
+    <div class="section-head"><h2>Why aging is slow, and why it matters</h2><p>Water enters epoxy by diffusion. For a laminate a few millimetres thick at typical diffusivities, ten or twenty days is far from saturation, so the aged coupons were wet at the surface and still dry in the core. The model below is Fick's law for a plate wetted from both faces. It is a model, not something the project measured.</p></div>
+    <div class="split">
+      <div class="ctl-grid">
+        <label>Diffusivity <span class="mono" id="dVal"></span><input type="range" id="dSlider" min="-7" max="-5.7" step="0.01" value="-6.3"></label>
+        <label>Thickness <span class="mono" id="hVal"></span><input type="range" id="hSlider" min="2" max="6" step="0.1" value="3.8"></label>
+        <label>Saturation uptake <span class="mono" id="mVal"></span><input type="range" id="mSlider" min="0.5" max="3" step="0.1" value="1.5"></label>
+        <label>Day shown in the profile <span class="mono" id="tVal"></span><input type="range" id="tSlider" min="0" max="120" step="1" value="20"></label>
+      </div>
+      <div class="charts two"><div id="uptakeChart"></div><div id="profileChart"></div></div>
+    </div>
+  </section>
+
+  <section id="tests" class="section">
+    <div class="section-head"><h2>Breaking the coupons</h2><p>Every specimen in the report can be loaded here with its own length, width, thickness, modulus and failure load. Deflection is exaggerated so you can see it. At the failure load the coupon cracks where that test says it should: the tension face in bending, the mid-plane in short-beam shear.</p></div>
+    <div class="split">
+      <div>
+        <div class="controls-row">
+          <div class="segmented" id="testTabs"><button class="on" data-test="flex">Three-point flexure · D7264</button><button data-test="ilss">Short-beam shear · D2344</button></div>
+        </div>
+        <div class="controls-row">
+          <div class="segmented" id="matTabs"></div>
+          <div class="segmented" id="stageTabs"></div>
+          <div class="segmented" id="specTabs"><button class="on" data-n="1">Specimen 1</button><button data-n="2">Specimen 2</button></div>
+        </div>
+        <div class="stage tall" id="testStage"></div>
+        <div class="loadrow"><span class="lbl">Load</span><input type="range" id="loadSlider" min="0" max="1.02" step="0.005" value="0"><span class="mono readout" id="loadReadout">0 N</span><button class="btn" id="runTest">Run to failure</button></div>
+      </div>
+      <aside class="side">
+        <h3 id="specTitle"></h3>
+        <dl class="titleblock" id="specBlock"></dl>
+        <svg id="stressChart" viewBox="0 0 320 150" class="stress-svg" role="img" aria-label="Stress through the thickness"></svg>
+        <div class="formula" id="formula"></div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="results" class="section">
+    <div class="section-head"><h2>What aging did</h2><p>Means of two specimens per point, with both specimens shown as small dots. Hover for values, or open the table under each chart.</p></div>
+    <div class="charts three"><div id="strengthChart"></div><div id="modulusChart"></div><div id="ilssChart"></div></div>
+    <div class="findings" id="findings"></div>
+    <h3 class="sub">Retained after 20 days, as a share of the un-aged mean</h3>
+    <div class="charts three"><div id="retStrength"></div><div id="retModulus"></div><div id="retIlss"></div></div>
+    <h3 class="sub">Where the hybrids sit</h3>
+    <div class="charts three"><div id="hybridModulus"></div><div id="hybridStrength"></div><div id="referenceChart"></div></div>
+  </section>
+
+  <section id="checks" class="section">
+    <div class="section-head"><h2>Checks and caveats</h2><p>Things a careful reader should know before quoting a number from this study.</p></div>
+    <div class="checks" id="checksList"></div>
+  </section>
+
+  <footer class="foot">
+    <div><strong>Basalt–Carbon Aging Lab</strong> is an interactive companion to the final-year project <em id="footTitle"></em>, by <span id="footTeam"></span>, supervised by <span id="footSup"></span>, <span id="footInst"></span>.</div>
+    <div>Data transcribed from the report's tables; models are labelled. Built with Three.js. <a href="https://github.com/Shahroz657/composite-aging-lab">Source</a> · <a href="https://machine-atlas-ecru.vercel.app/">Machine Atlas</a></div>
+  </footer>
+</main>
+<div class="tooltip3d hidden" id="tip3d"></div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

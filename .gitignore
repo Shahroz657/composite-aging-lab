@@ -1,0 +1,5 @@
+.DS_Store
+__pycache__/
+screenshots/chart-*.png
+screenshots/ctl.png
+screenshots/stress.png
