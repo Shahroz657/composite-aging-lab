@@ -86,15 +86,15 @@ export class Stage {
 // ---------- laminate stacks ----------
 export function buildStacks(stage, materials) {
   const group = new THREE.Group(); stage.scene.add(group);
-  const L = 60, W = 42, t = 0.5, gap = 90; const stacks = [];
+  const L = 60, W = 42, t = 0.9, gap = 90; const stacks = [];
   materials.forEach((m, i) => {
     const g = new THREE.Group(); g.position.x = (i - (materials.length - 1) / 2) * gap; group.add(g);
     const plies = m.layup.map((k, j) => { const p = plyMesh(k, L, t, W); p.position.y = j * t; g.add(p); stage.pickable(p, { name: `Ply ${j + 1} of 8 · ${PLY[k].name}`, desc: `${m.name}. ${k === 'C' ? 'Woven carbon fabric, twill.' : 'Woven basalt fabric, plain weave.'}`, mat: m.id }); return p; });
     g.add(stage.label(m.name, new THREE.Vector3(0, -8, W / 2 + 6), 'lbl3d caption'));
-    stacks.push({ g, plies, explode: 0, target: 0, mat: m });
+    stacks.push({ g, plies, explode: 0.55, target: 0.55, mat: m });
   });
-  stage.onFrame(dt => { for (const s of stacks) { s.explode += (s.target - s.explode) * Math.min(1, dt * 6); s.plies.forEach((p, j) => { p.position.y = j * t + j * 2.2 * s.explode; }); } });
-  stage.fit(new THREE.Vector3(0, 6, 0), 150, [0.55, 0.65, 1], -1);
+  stage.onFrame(dt => { for (const s of stacks) { s.explode += (s.target - s.explode) * Math.min(1, dt * 6); s.plies.forEach((p, j) => { p.position.y = j * t + j * 3.2 * s.explode; }); } });
+  stage.fit(new THREE.Vector3(0, 14, 0), 118, [0.6, 0.42, 1], -1);
   return { group, stacks, setExplode(id, v) { for (const s of stacks) s.target = (id === 'all' || s.mat.id === id) ? v : (id === 'all' ? v : 0); } };
 }
 

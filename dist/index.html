@@ -201,7 +201,7 @@ input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 
     </div>
     <div class="hero-3d">
       <div class="stage" id="stackStage"></div>
-      <div class="stage-hint">Drag to orbit · hover a ply</div>
+      <div class="stage-hint">Plies fanned open so the carbon core shows · drag to orbit · hover a ply · click a card below to open one stack</div>
     </div>
   </section>
 
@@ -633,15 +633,15 @@ class Stage {
 // ---------- laminate stacks ----------
 function buildStacks(stage, materials) {
   const group = new THREE.Group(); stage.scene.add(group);
-  const L = 60, W = 42, t = 0.5, gap = 90; const stacks = [];
+  const L = 60, W = 42, t = 0.9, gap = 90; const stacks = [];
   materials.forEach((m, i) => {
     const g = new THREE.Group(); g.position.x = (i - (materials.length - 1) / 2) * gap; group.add(g);
     const plies = m.layup.map((k, j) => { const p = plyMesh(k, L, t, W); p.position.y = j * t; g.add(p); stage.pickable(p, { name: `Ply ${j + 1} of 8 · ${PLY[k].name}`, desc: `${m.name}. ${k === 'C' ? 'Woven carbon fabric, twill.' : 'Woven basalt fabric, plain weave.'}`, mat: m.id }); return p; });
     g.add(stage.label(m.name, new THREE.Vector3(0, -8, W / 2 + 6), 'lbl3d caption'));
-    stacks.push({ g, plies, explode: 0, target: 0, mat: m });
+    stacks.push({ g, plies, explode: 0.55, target: 0.55, mat: m });
   });
-  stage.onFrame(dt => { for (const s of stacks) { s.explode += (s.target - s.explode) * Math.min(1, dt * 6); s.plies.forEach((p, j) => { p.position.y = j * t + j * 2.2 * s.explode; }); } });
-  stage.fit(new THREE.Vector3(0, 6, 0), 150, [0.55, 0.65, 1], -1);
+  stage.onFrame(dt => { for (const s of stacks) { s.explode += (s.target - s.explode) * Math.min(1, dt * 6); s.plies.forEach((p, j) => { p.position.y = j * t + j * 3.2 * s.explode; }); } });
+  stage.fit(new THREE.Vector3(0, 14, 0), 118, [0.6, 0.42, 1], -1);
   return { group, stacks, setExplode(id, v) { for (const s of stacks) s.target = (id === 'all' || s.mat.id === id) ? v : (id === 'all' ? v : 0); } };
 }
 
@@ -775,7 +775,7 @@ MATERIALS.forEach(m => {
     <div class="stack">${m.layup.slice().reverse().map(k => `<i class="${k}"></i>`).join('')}</div>
     <div class="kv"><span>Layup</span><span class="mono">${layupNotation(m)}</span><span>Basalt share</span><span class="mono">${Math.round(m.basalt * 100)}%</span><span>Flexural modulus</span><span class="mono">${fmt(meanFlex(m.id, 0, 'E'), 1)} GPa</span><span>Flexural strength</span><span class="mono">${fmt(meanFlex(m.id, 0, 'sigma'))} MPa</span><span>ILSS</span><span class="mono">${fmt(meanIlss(m.id, 0), 1)} MPa</span></div>
     <p>${m.blurb}</p>`;
-  c.addEventListener('click', () => { exploded = exploded === m.id ? null : m.id; cards.querySelectorAll('.card').forEach(x => x.classList.toggle('on', x.dataset.id === exploded)); stacks.stacks.forEach(s => { s.target = s.mat.id === exploded ? 1 : 0; }); stackStage.controls.autoRotate = false; });
+  c.addEventListener('click', () => { exploded = exploded === m.id ? null : m.id; cards.querySelectorAll('.card').forEach(x => x.classList.toggle('on', x.dataset.id === exploded)); stacks.stacks.forEach(s => { s.target = s.mat.id === exploded ? 1.1 : (exploded ? 0.15 : 0.55); }); stackStage.controls.autoRotate = false; });
   cards.appendChild(c);
 });
 

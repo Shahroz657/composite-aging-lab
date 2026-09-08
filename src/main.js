@@ -37,7 +37,7 @@ MATERIALS.forEach(m => {
     <div class="stack">${m.layup.slice().reverse().map(k => `<i class="${k}"></i>`).join('')}</div>
     <div class="kv"><span>Layup</span><span class="mono">${layupNotation(m)}</span><span>Basalt share</span><span class="mono">${Math.round(m.basalt * 100)}%</span><span>Flexural modulus</span><span class="mono">${fmt(meanFlex(m.id, 0, 'E'), 1)} GPa</span><span>Flexural strength</span><span class="mono">${fmt(meanFlex(m.id, 0, 'sigma'))} MPa</span><span>ILSS</span><span class="mono">${fmt(meanIlss(m.id, 0), 1)} MPa</span></div>
     <p>${m.blurb}</p>`;
-  c.addEventListener('click', () => { exploded = exploded === m.id ? null : m.id; cards.querySelectorAll('.card').forEach(x => x.classList.toggle('on', x.dataset.id === exploded)); stacks.stacks.forEach(s => { s.target = s.mat.id === exploded ? 1 : 0; }); stackStage.controls.autoRotate = false; });
+  c.addEventListener('click', () => { exploded = exploded === m.id ? null : m.id; cards.querySelectorAll('.card').forEach(x => x.classList.toggle('on', x.dataset.id === exploded)); stacks.stacks.forEach(s => { s.target = s.mat.id === exploded ? 1.1 : (exploded ? 0.15 : 0.55); }); stackStage.controls.autoRotate = false; });
   cards.appendChild(c);
 });
 
